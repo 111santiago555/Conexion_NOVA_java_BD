@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns="http://jcp.org"
+         xmlns:xsi="http://w3.org"
+         xsi:schemaLocation="http://jcp.org
+                             http://jcp.org/web-app_4_0.xsd"
+         version="4.0">
+
+    <!-- Registro explícito de tu controlador de autenticación -->
+    <servlet>
+        <servlet-name>AuthenticationController</servlet-name>
+        <servlet-class>Controller.AuthenticationController</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>AuthenticationController</servlet-name>
+        <url-pattern>/auth</url-pattern>
+    </servlet-mapping>
+
+    <!-- Define la página de inicio por defecto del sistema -->
+    <welcome-file-list>
+        <welcome-file>Web_inicio/index.jsp</welcome-file>
+    </welcome-file-list>
+
+</web-app>

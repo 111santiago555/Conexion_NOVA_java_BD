@@ -1,0 +1,287 @@
+/* ============================
+   TITULO PRINCIPAL
+============================ */
+
+header{
+    text-align: center;
+    margin: 40px 0;
+}
+
+header h1{
+    font-size: 2.8rem;
+    font-weight: bold;
+}
+
+
+#nameProveedor{
+    color: #0d6efd;
+}
+
+
+
+/* ============================
+   DESCRIPCIÓN PRINCIPAL
+============================ */
+
+h2{
+    text-align: center;
+    margin: 30px 0;
+    font-size: 2rem;
+    font-weight: bold;
+}
+
+
+
+/* ============================
+   TARJETAS INFORMATIVAS
+============================ */
+
+#card-proveedor{
+
+    display: flex;
+    justify-content: center;
+    align-items: stretch;
+
+    gap: 30px;
+    flex-wrap: wrap;
+
+    margin: 50px auto;
+    width: 90%;
+
+}
+
+
+#card-1,
+#card-2{
+
+    width: 420px;
+
+    background: white;
+
+    border-radius: 15px;
+
+    padding: 25px;
+
+    box-shadow: 0 8px 20px rgba(0,0,0,.15);
+
+    transition: .3s;
+
+}
+
+
+#card-1:hover,
+#card-2:hover{
+
+    transform: translateY(-8px);
+
+    box-shadow: 0 12px 30px rgba(0,0,0,.25);
+
+}
+
+
+
+#card-1-title,
+#card-2-title{
+
+    color: #0d6efd;
+
+    font-weight: bold;
+
+    margin-bottom: 15px;
+
+}
+
+
+
+#card-1-p,
+#card-2-p{
+
+    text-align: justify;
+
+    line-height: 1.7;
+
+}
+
+
+
+/* ============================
+   TABLA DE PROVEEDORES
+============================ */
+
+
+.titulo-tabla{
+
+    text-align: center;
+
+    font-size: 2.2rem;
+
+    font-weight: bold;
+
+    color: #0d6efd;
+
+    text-transform: uppercase;
+
+    letter-spacing: 2px;
+
+    margin: 40px 0 25px;
+
+}
+
+
+
+.table-responsive{
+
+    width: 80%;
+
+    margin: 0 auto;
+
+    border-radius: 15px;
+
+    overflow: hidden;
+
+}
+
+
+
+.tabla-proveedores{
+
+    background: white;
+
+    border-radius: 12px;
+
+    overflow: hidden;
+
+}
+
+
+
+.tabla-proveedores thead{
+
+    background: linear-gradient(
+        90deg,
+        #0d6efd,
+        #3b82f6
+    );
+
+    color: white;
+
+}
+
+
+
+.tabla-proveedores thead th{
+
+    text-align: center;
+
+    padding: 15px;
+
+    font-size: 18px;
+
+}
+
+
+
+.tabla-proveedores tbody td{
+
+    text-align: center;
+
+    padding: 14px;
+
+    font-size: 16px;
+
+}
+
+
+
+.tabla-proveedores tbody tr{
+
+    transition: .3s;
+
+}
+
+
+
+.tabla-proveedores tbody tr:hover{
+
+    background: #dbeafe;
+
+    transform: scale(1.01);
+
+}
+
+
+
+/* ============================
+   FOOTER
+============================ */
+
+
+.footer-proveedor{
+
+    background: #0d6efd;
+
+    color: white;
+
+    text-align: center;
+
+    padding: 18px;
+
+    font-weight: bold;
+
+    margin-top: 60px;
+
+}
+
+
+
+/* ============================
+   RESPONSIVE
+============================ */
+
+
+@media(max-width:768px){
+
+
+    header h1{
+
+        font-size: 2rem;
+
+    }
+
+
+    h2{
+
+        font-size: 1.5rem;
+
+    }
+
+
+    #card-proveedor{
+
+        width: 95%;
+
+    }
+
+
+    #card-1,
+    #card-2{
+
+        width: 100%;
+
+    }
+
+
+    .table-responsive{
+
+        width: 95%;
+
+    }
+
+
+    .titulo-tabla{
+
+        font-size: 1.7rem;
+
+    }
+
+}

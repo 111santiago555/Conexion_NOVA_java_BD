@@ -1,0 +1,112 @@
+/* =====================================================
+   FOOTER SIEMPRE AL FONDO DE LA PÁGINA
+   ===================================================== */
+
+html, body {
+    height: 100%;
+    margin: 0;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+/*
+ * El contenido principal crece para ocupar
+ * todo el espacio disponible, empujando
+ * el footer hacia abajo.
+ */
+main,
+.table-responsive {
+    flex: 1;
+}
+
+footer {
+    flex-shrink: 0;
+}
+
+
+/* =====================================================
+   ESTILOS - TABLA DE GESTIÓN DE PROVEEDORES
+   ===================================================== */
+
+.tabla-proveedores {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: "Segoe UI", Arial, sans-serif;
+    font-size: 0.95rem;
+    background-color: #ffffff;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+/* Encabezado de la tabla */
+table.tabla-proveedores thead tr th {
+    background-color: #0d6efd !important;
+    color: #ffffff !important;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    padding: 14px 16px;
+    text-align: left;
+    white-space: nowrap;
+    border: none;
+}
+
+/* Celdas del cuerpo */
+.tabla-proveedores tbody td {
+    padding: 12px 16px;
+    color: #333333;
+    border-bottom: 1px solid #e9ecef;
+    vertical-align: middle;
+}
+
+/* Filas alternadas */
+.tabla-proveedores tbody tr:nth-child(even) {
+    background-color: #f8f9fa;
+}
+
+/* Efecto hover sobre la fila */
+.tabla-proveedores tbody tr:hover {
+    background-color: #eef4ff;
+    transition: background-color 0.15s ease-in-out;
+}
+
+/* Última fila sin borde inferior */
+.tabla-proveedores tbody tr:last-child td {
+    border-bottom: none;
+}
+
+/* Mensaje de "sin proveedores" */
+.tabla-proveedores tbody td.text-center {
+    text-align: center;
+    padding: 24px;
+    color: #6c757d;
+    font-style: italic;
+}
+
+/* Botón de eliminar dentro de la tabla */
+.tabla-proveedores .btn-danger {
+    padding: 4px 12px;
+    font-size: 0.85rem;
+    border-radius: 6px;
+}
+
+/* Contenedor responsive */
+.table-responsive {
+    margin: 20px auto;
+    max-width: 1400px;
+    padding: 0 20px;
+}
+
+/* Ajuste en pantallas pequeñas */
+@media (max-width: 768px) {
+    .tabla-proveedores thead th,
+    .tabla-proveedores tbody td {
+        padding: 8px 10px;
+        font-size: 0.85rem;
+    }
+}
