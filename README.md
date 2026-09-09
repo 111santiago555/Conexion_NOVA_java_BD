@@ -50,10 +50,10 @@ Nota: la tabla pedido se relaciona con IdProveedor y IdTienda (no existe IdClien
 
 | Pendiente | Descripción |
 |---|---|
-| Bug: borrado de productos | Tras restringir el borrado únicamente al proveedor que publicó el producto, la eliminación dejó de funcionar. |
-| Falta columna Password en tienda | La tabla tienda no tiene columna Password, necesaria para autenticación. |
-| Contraseñas en texto plano | Actualmente no están cifradas; pendiente migrar a hash. |
-| En desarrollo | Evidencia GA7-220501096-AA5-EV01 (servicio REST de registro/login). |
+| Vistas de la tienda | Se está trabajando en la vista y funciones de la tienda. |
+| Carrito de compras | Estamos planeando el funcionamiento del carrito de compras y su diseño visual. |
+| Sistema de inventario | Se está haciendo trabajo de investigación para integrar el sistema de inventarios. |
+| En desarrollo | Evidencia de producto: GA7-220501096-AA5-EV02 API del proyecto. |
 
 **Tecnologías**
 
