@@ -47,16 +47,19 @@ public class TiendaController extends HttpServlet {
                          HttpServletResponse response)
             throws ServletException, IOException {
 
+        // Validacion de sesion: si no hay usuario logueado, SessionUtil redirige al login
         if (!SessionUtil.verificarAcceso(request, response)) {
             return;
         }
 
         String accion = request.getParameter("accion");
 
+        // Si no llega ninguna accion, se ejecuta listar por defecto
         if (accion == null || accion.trim().isEmpty()) {
             accion = "listar";
         }
 
+        // Enrutamiento segun la accion recibida por parametro
         switch (accion) {
 
             case "listar":
@@ -68,6 +71,7 @@ public class TiendaController extends HttpServlet {
                 break;
 
             default:
+                // Accion desconocida: se devuelve al inicio
                 response.sendRedirect(
                         request.getContextPath()
                                 + "/Web_inicio/index.jsp"
@@ -83,13 +87,16 @@ public class TiendaController extends HttpServlet {
                         HttpServletResponse response)
             throws ServletException, IOException {
         try {
+            // Solicita la informacion al Service
             List<Tienda> lista = tiendaService.listarTienda();
 
+            // Guarda la lista para que el JSP pueda mostrarla
             request.setAttribute(
                     "listaTiendas",
                     lista
             );
 
+            // Envia la informacion a la vista
             request.getRequestDispatcher(
                     "/Web_Tienda/Inicio_tienda.jsp"
             ).forward(request, response);
@@ -117,6 +124,7 @@ public class TiendaController extends HttpServlet {
                     lista
             );
 
+            // A diferencia de listar(), aqui se reenvia a la vista de GESTION del Admin
             request.getRequestDispatcher(
                     "/Web_Admin/Gestion_tiendas.jsp"
             ).forward(request, response);
@@ -129,6 +137,12 @@ public class TiendaController extends HttpServlet {
         }
     }
 
+    /**
+     * Método encargado de recibir peticiones POST.
+     *
+     * Maneja las acciones que modifican datos: crear, eliminar
+     * y actualizar una tienda.
+     */
     @Override
     protected void doPost(HttpServletRequest request,
                           HttpServletResponse response)
@@ -145,6 +159,7 @@ public class TiendaController extends HttpServlet {
             return;
         }
 
+        // Las demas acciones (eliminar, actualizar) si requieren sesion activa
         if (!SessionUtil.verificarAcceso(request, response)) {
             return;
         }
@@ -169,20 +184,23 @@ public class TiendaController extends HttpServlet {
 
     /**
      * Registra una nueva tienda.
-     * La contraseña se cifra dentro de TiendaService.crearTienda(...).
+     * La contraseña se cifra dentro de TiendaService.crearTienda(...),
+     * este metodo solo arma el objeto con los datos crudos del request.
      */
     public void crearTienda(HttpServletRequest request,
                             HttpServletResponse response)
             throws ServletException, IOException {
         try {
+            // Se arma el objeto Tienda con los datos que llegan del formulario
             Tienda nueva = new Tienda();
             nueva.setNombre(request.getParameter("nombre"));
-            nueva.setPassword(request.getParameter("password"));
+            nueva.setPassword(request.getParameter("password")); // texto plano; se cifra en el Service
             nueva.setDireccion(request.getParameter("direccion"));
             nueva.setCiudad(request.getParameter("ciudad"));
             nueva.setTelefono(request.getParameter("telefono"));
             nueva.setCorreo(request.getParameter("correo"));
 
+            // Se delega la validacion, el cifrado de la contraseña y el guardado al Service
             tiendaService.crearTienda(nueva);
 
             response.sendRedirect(
@@ -191,12 +209,14 @@ public class TiendaController extends HttpServlet {
             );
 
         } catch (IllegalArgumentException e) {
+            // Error de validacion (campo obligatorio vacio, etc.)
             request.setAttribute("error", e.getMessage());
             request.getRequestDispatcher(
                     "/Web_inicio/Login_New_Tienda.jsp"
             ).forward(request, response);
 
         } catch (SQLException e) {
+            // Error de base de datos (por ejemplo, nombre o correo duplicado)
             request.setAttribute("error", e.getMessage());
             request.getRequestDispatcher("/error.jsp").forward(request, response);
         }

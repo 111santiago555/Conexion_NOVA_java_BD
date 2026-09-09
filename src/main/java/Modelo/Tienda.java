@@ -1,5 +1,9 @@
 package Modelo;
 
+/**
+ * Modelo que representa una Tienda del sistema NovaMarket.
+ * Corresponde a la tabla Tienda de la base de datos.
+ */
 public class Tienda {
 
     /** Identificador único de la tienda. */
@@ -19,9 +23,29 @@ public class Tienda {
     /** Estado de la tienda (ej. ACTIVA / INACTIVA). */
     private String Estado;
 
+    /**
+     * Constructor vacío.
+     * Permite crear objetos Tienda sin asignar valores iniciales
+     * (usado, por ejemplo, cuando solo se necesita setear el Id
+     * para una eliminación).
+     */
     public Tienda() {
     }
 
+    /**
+     * Constructor con parámetros.
+     * Se usa principalmente para mapear una fila del ResultSet
+     * hacia un objeto Tienda (ver TiendaDAO.mapearTienda).
+     *
+     * @param IdTienda Identificador único de la tienda.
+     * @param Nombre Nombre de la tienda.
+     * @param Password Contraseña cifrada (hash) de la tienda.
+     * @param Direccion Dirección física.
+     * @param Ciudad Ciudad donde opera.
+     * @param Telefono Teléfono de contacto.
+     * @param Correo Correo electrónico.
+     * @param Estado Estado actual (ACTIVA/INACTIVA).
+     */
     public Tienda(int IdTienda, String Nombre, String Password, String Direccion,
                   String Ciudad, String Telefono, String Correo, String Estado) {
         this.IdTienda = IdTienda;
@@ -33,6 +57,8 @@ public class Tienda {
         this.Correo = Correo;
         this.Estado = Estado;
     }
+
+    // Getters y setters de cada atributo
 
     public int getIdTienda() { return IdTienda; }
     public void setIdTienda(int IdTienda) { this.IdTienda = IdTienda; }

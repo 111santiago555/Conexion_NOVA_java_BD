@@ -72,6 +72,7 @@ public class ProveedorController extends HttpServlet {
             accion = "listar";
         }
 
+        // Enrutamiento segun la accion recibida por parametro
         switch (accion) {
 
             case "listar":
@@ -136,6 +137,8 @@ public class ProveedorController extends HttpServlet {
                     "/Web_Proveedor/Inicio_proveedor.jsp"
             ).forward(request, response);
         } catch (SQLException e) {
+            // Cualquier error de base de datos se propaga como ServletException
+            // para que el contenedor (Tomcat) muestre la pagina de error
             throw new ServletException(
                     "Error al obtener la lista de proveedores.",
                     e
@@ -171,11 +174,13 @@ public class ProveedorController extends HttpServlet {
             Proveedor proveedor =
                     proveedorService.buscarProveedorPorNombre(nombre);
             if(proveedor != null){
+                // Se encontro: se envia el proveedor a la vista
                 request.setAttribute(
                         "proveedorEncontrado",
                         proveedor
                 );
             }else{
+                // No se encontro: se envia un mensaje informativo a la vista
                 request.setAttribute(
                         "mensaje",
                         "No se encontró ningún proveedor."
@@ -208,6 +213,8 @@ public class ProveedorController extends HttpServlet {
                     "listaProveedores",
                     lista
             );
+            // A diferencia de listar(), aqui se reenvia a la vista de GESTION del Admin,
+            // que tiene botones de eliminar/actualizar que un proveedor normal no deberia ver
             request.getRequestDispatcher(
                     "/Web_Admin/Gestion_proveedores.jsp"
             ).forward(request, response);
@@ -219,47 +226,66 @@ public class ProveedorController extends HttpServlet {
         }
     }
 
+    /**
+     * Método encargado de recibir peticiones POST.
+     *
+     * Maneja las acciones que modifican datos: crear, eliminar
+     * y actualizar un proveedor.
+     */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         request.setCharacterEncoding("UTF-8");
 
         String accion = request.getParameter("accion");
+
+        // El registro de un proveedor nuevo NO requiere sesion activa
+        // (es el formulario publico de "Nuevo Proveedor"), por eso se
+        // atiende antes de la validacion de SessionUtil y se retorna de inmediato
         if ("crearProveedor".equals(accion)) {
             crearProveedor(request, response);
             return; // Detiene la ejecución aquí para que no valide la sesión
         }
 
+        // Las demas acciones (eliminar, actualizar) si requieren sesion activa
         if (!SessionUtil.verificarAcceso(request, response)) {
             return;
         }
         //accion = request.getParameter("accion");
-            switch (accion) {
-                /**case "crearProveedor":
-                    crearProveedor(request,response);
-                    break;**/
-                case "eliminarProveedor":
-                    eliminarProveedor(request,response);
-                    break;
+        switch (accion) {
+            /**case "crearProveedor":
+             crearProveedor(request,response);
+             break;**/
+            case "eliminarProveedor":
+                eliminarProveedor(request,response);
+                break;
 
-                case "actualizarProveedor":
-                    actualizarProveedor(request,response);
-                    break;
-                default:
-                    response.sendRedirect(request.getContextPath() + "/proveedores?accion=listar");
-                    break;
+            case "actualizarProveedor":
+                actualizarProveedor(request,response);
+                break;
+            default:
+                response.sendRedirect(request.getContextPath() + "/proveedores?accion=listar");
+                break;
 
-            }
+        }
     }
 
+    /**
+     * Registra un nuevo proveedor a partir de los datos del formulario.
+     * La contraseña se cifra dentro de ProveedorService.crearProveedor(...),
+     * este metodo solo arma el objeto con los datos crudos del request.
+     */
     public void crearProveedor(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try{
+            // Se arma el objeto Proveedor con los datos que llegan del formulario
             Proveedor nuevo = new Proveedor();
             nuevo.setNombre(request.getParameter("nombre"));
             nuevo.setCodigo(request.getParameter("codigo"));
             nuevo.setContacto(request.getParameter("contacto"));
             nuevo.setCorreo(request.getParameter("correo"));
-            nuevo.setPassword(request.getParameter("password"));
+            nuevo.setPassword(request.getParameter("password")); // texto plano; se cifra en el Service
 
+            // El formulario separa la direccion en 3 campos (fisica, ciudad, departamento);
+            // aqui se concatenan en un solo String antes de guardar
             String dirFisica = request.getParameter("direccionFisica");
             String ciudad = request.getParameter("ciudad");
             String depto = request.getParameter("departamento");
@@ -267,19 +293,27 @@ public class ProveedorController extends HttpServlet {
             String direccionCompleta = dirFisica + ", " + ciudad + " - " + depto;
             nuevo.setDireccion(direccionCompleta);
 
+            // Se delega la validacion, el cifrado de la contraseña y el guardado al Service
             proveedorService.crearProveedor(nuevo);
 
             response.sendRedirect(request.getContextPath() + "/proveedores?accion=listar&registroExitoso=true");
 
         }catch(IllegalArgumentException e){
+            // Error de validacion (campo obligatorio vacio, etc.)
             request.setAttribute("error", e.getMessage());
             request.getRequestDispatcher("/proveedores?accion=listar&registroExitoso=false").forward(request, response);
         }catch(SQLException e){
+            // Error de base de datos (por ejemplo, codigo de proveedor duplicado)
             request.setAttribute("error", e.getMessage());
             request.getRequestDispatcher("/error.jsp").forward(request, response);
         }
     }
 
+    /**
+     * Elimina (da de baja logica) un proveedor por su id.
+     * Redirige a una vista distinta segun el rol de quien
+     * realizo la accion (Admin vs Proveedor).
+     */
     public void eliminarProveedor(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try{
             Proveedor eliminar = new Proveedor();
@@ -315,7 +349,11 @@ public class ProveedorController extends HttpServlet {
         }
     }
 
-        public void actualizarProveedor(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    /**
+     * Actualiza los datos de un proveedor existente
+     * (no incluye el cambio de contraseña, ver ProveedorDAO.actualizar).
+     */
+    public void actualizarProveedor(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try{
             Proveedor actualizar = new Proveedor();
             actualizar.setIdProveedor(Integer.parseInt(request.getParameter("idProveedor")));
@@ -335,8 +373,8 @@ public class ProveedorController extends HttpServlet {
         }catch(SQLException e){
             throw new ServletException("Error al actualizar proveedor.", e);
         }
-        }
-    
+    }
+
 
 }
 

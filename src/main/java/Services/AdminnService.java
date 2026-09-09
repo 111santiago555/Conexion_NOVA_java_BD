@@ -2,7 +2,8 @@ package Services;
 
 import DAO.AdminNDAO;
 import Modelo.AdminN;
-
+import Util.PasswordUtil;
+import Util.PasswordUtil;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -38,6 +39,11 @@ public class AdminnService {
     /**
      * Valida las credenciales de un administrador.
      *
+     * Ya no se compara la contraseña directamente en el SQL del DAO
+     * (eso solo funcionaba en texto plano). Ahora se trae el
+     * administrador solo por nombre y se verifica el hash aquí,
+     * igual que en ProveedorService y TiendaService.
+     *
      * @param nombreAdmin Nombre del administrador.
      * @param password Contraseña del administrador.
      * @return Objeto {@code AdminN} si las credenciales son válidas;
@@ -55,10 +61,22 @@ public class AdminnService {
             return null;
         }
 
-        return adminNDAO.loginAdminN(
-                nombreAdmin.trim(),
-                password
-        );
+        // 1. Se busca el admin solo por nombre (sin tocar la contraseña)
+        AdminN admin = adminNDAO.buscarPorNombreExacto(nombreAdmin.trim());
+
+        if (admin == null) {
+            return null; // no existe ese administrador
+        }
+
+        // 2. Se compara el password recibido (texto plano) contra el hash guardado
+        boolean claveCorrecta = PasswordUtil.verificar(password, admin.getPassword());
+
+        if (!claveCorrecta) {
+            return null; // existe el admin pero la clave no coincide
+        }
+
+        // 3. Autenticación satisfactoria
+        return admin;
     }
 
     /**

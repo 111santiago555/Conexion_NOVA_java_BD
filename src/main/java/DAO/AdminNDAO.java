@@ -10,26 +10,17 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * DAO (Data Access Object) encargado de realizar las operaciones
- * CRUD de la entidad AdminN sobre la base de datos.
- *
- * Gestiona el inicio de sesión, registro, actualización,
- * eliminación y consultas de administradores.
- *
- * @author Santiago
- * @version 1.0
- */
 public class AdminNDAO {
 
     /**
-     * Valida las credenciales de un administrador.
+     * Valida las credenciales de un administrador comparando
+     * Password directamente en el SQL.
      *
-     * @param nombreAdmin Nombre del administrador.
-     * @param password Contraseña del administrador.
-     * @return Objeto AdminN si las credenciales son correctas;
-     *         en caso contrario retorna null.
-     * @throws SQLException Si ocurre un error durante la consulta.
+     * NOTA: este metodo queda sin uso desde que AdminnService
+     * empezo a comparar la contraseña como hash (ver
+     * AdminnService.loginAdminN, que ahora usa
+     * buscarPorNombreExacto + PasswordUtil.verificar). Se conserva
+     * como referencia, pero ya no es llamado por el Service.
      */
     public AdminN loginAdminN(String nombreAdmin, String password)
             throws SQLException {
@@ -42,6 +33,33 @@ public class AdminNDAO {
 
             ps.setString(1, nombreAdmin);
             ps.setString(2, password);
+
+            try (ResultSet rs = ps.executeQuery()) {
+
+                if (rs.next()) {
+                    return mapearAdmin(rs);
+                }
+
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Busca un administrador por su NombreAdmin exacto, SIN comparar
+     * la contraseña. Este es el metodo que usa AdminnService.loginAdminN
+     * para traer el hash guardado y verificarlo en el Service,
+     * igual que ProveedorDAO.buscarPorNombre y TiendaDAO.buscarPorNombre.
+     */
+    public AdminN buscarPorNombreExacto(String nombreAdmin) throws SQLException {
+
+        String sql = "SELECT * FROM AdminN WHERE NombreAdmin = ?";
+
+        try (Connection conexion = Conexion.conectar();
+             PreparedStatement ps = conexion.prepareStatement(sql)) {
+
+            ps.setString(1, nombreAdmin);
 
             try (ResultSet rs = ps.executeQuery()) {
 
