@@ -45,7 +45,7 @@ public class PedidoDAO {
                 "INSERT INTO Pedido " +
                         "(NumeroPedido, Fecha, Estado, Total, " +
                         "IdProveedor, IdTienda) " +
-                        "VALUES (?,?,?,?,?,?,?)";
+                        "VALUES (?,?,?,?,?,?)";
 
         try (Connection conexion = Conexion.conectar();
              PreparedStatement ps =
