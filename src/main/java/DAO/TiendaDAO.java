@@ -138,6 +138,26 @@ public class TiendaDAO {
     }
 
     /**
+     * Busca una tienda por su Id.
+     */
+    public Tienda buscarPorId(int idTienda) throws SQLException {
+        String SQL = "SELECT * FROM Tienda WHERE IdTienda=?";
+
+        try (Connection conexion = Conexion.conectar();
+             PreparedStatement ps = conexion.prepareStatement(SQL)) {
+
+            ps.setInt(1, idTienda);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return mapearTienda(rs);
+                }
+            }
+        }
+        return null;
+    }
+
+    /**
      * Convierte una fila del ResultSet en un objeto Tienda.
      * Metodo privado de apoyo para no repetir el mismo mapeo
      * en listar y buscarPorNombre.

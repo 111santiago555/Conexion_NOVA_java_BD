@@ -62,6 +62,12 @@
 
         <div style="width: 100%; max-width: 400px; padding: 20px;">
 
+            <% if ("true".equals(request.getParameter("registroExitoso"))) { %>
+                <div class="alert alert-success text-center shadow-sm">
+                    ¡Registro exitoso! Por favor inicia sesión con tus credenciales.
+                </div>
+            <% } %>
+
             <%-- 1. CONTROL DE ERRORES: Captura alertas del backend --%>
             <%
                 String errorMsg = (String) request.getAttribute("error");

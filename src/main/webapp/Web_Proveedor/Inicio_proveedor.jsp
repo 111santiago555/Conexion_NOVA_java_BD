@@ -3,9 +3,15 @@
 <%@ page import="Modelo.Proveedor" %>
 
 <%
-  Proveedor proveedorLogueado = (Proveedor) session.getAttribute("usuarioLogueado");
+    Object usuarioSesion = session.getAttribute("usuarioLogueado");
+    Proveedor proveedorLogueado = (usuarioSesion instanceof Proveedor) ? (Proveedor) usuarioSesion : null;
 
-   List<Proveedor> lista = (List<Proveedor>) request.getAttribute("listaProveedores");
+    if (proveedorLogueado == null || !"PROVEEDOR".equals(session.getAttribute("rol"))) {
+        response.sendRedirect(request.getContextPath() + "/Web_inicio/Login.jsp");
+        return;
+    }
+
+    List<Proveedor> lista = (List<Proveedor>) request.getAttribute("listaProveedores");
 %>
 
 
@@ -55,7 +61,7 @@
                 </li>
                 <li class="nav-item">
                     <a class="nav-link text-white"
-                       href="${pageContext.request.contextPath}/Web_Proveedor/PedidosProveedor.jsp">
+                       href="${pageContext.request.contextPath}/pedidos?accion=pedidosProveedor">
                         Pedidos
                     </a>
                 </li>

@@ -136,4 +136,14 @@ public class ProveedorService {
         return proveedorDAO.buscarPorNombre(nombre);
     }
 
+    /**
+     * Buscar proveedor por Id.
+     */
+    public Proveedor buscarProveedorPorId(int idProveedor) throws SQLException {
+        if (idProveedor <= 0) {
+            return null;
+        }
+        return proveedorDAO.buscarPorId(idProveedor);
+    }
+
 }

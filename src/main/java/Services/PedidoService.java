@@ -282,4 +282,37 @@ public class PedidoService {
 
     }
 
+    /**
+     * Obtiene todos los pedidos pertenecientes a un proveedor.
+     */
+    public List<Pedido> listarPorProveedor(int idProveedor) throws SQLException {
+        if (idProveedor <= 0) {
+            throw new IllegalArgumentException("El identificador del proveedor no es válido.");
+        }
+        return pedidoDAO.listarPorProveedor(idProveedor);
+    }
+
+    /**
+     * Obtiene todos los pedidos realizados por una tienda.
+     */
+    public List<Pedido> listarPorTienda(int idTienda) throws SQLException {
+        if (idTienda <= 0) {
+            throw new IllegalArgumentException("El identificador de la tienda no es válido.");
+        }
+        return pedidoDAO.listarPorTienda(idTienda);
+    }
+
+    /**
+     * Actualiza el estado de un pedido con validación.
+     */
+    public void actualizarEstado(int idPedido, String nuevoEstado) throws SQLException {
+        if (idPedido <= 0) {
+            throw new IllegalArgumentException("El identificador del pedido no es válido.");
+        }
+        if (nuevoEstado == null || nuevoEstado.trim().isEmpty()) {
+            throw new IllegalArgumentException("El nuevo estado es obligatorio.");
+        }
+        pedidoDAO.actualizarEstado(idPedido, nuevoEstado.trim());
+    }
+
 }

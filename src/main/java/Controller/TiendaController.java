@@ -166,6 +166,10 @@ public class TiendaController extends HttpServlet {
 
         switch (accion) {
 
+            case "crearTiendaAdmin":
+                crearTiendaAdmin(request, response);
+                break;
+
             case "eliminarTienda":
                 eliminarTienda(request, response);
                 break;
@@ -205,7 +209,7 @@ public class TiendaController extends HttpServlet {
 
             response.sendRedirect(
                     request.getContextPath()
-                            + "/tiendas?accion=listar&registroExitoso=true"
+                            + "/Web_inicio/Login.jsp?registroExitoso=true"
             );
 
         } catch (IllegalArgumentException e) {
@@ -217,6 +221,40 @@ public class TiendaController extends HttpServlet {
 
         } catch (SQLException e) {
             // Error de base de datos (por ejemplo, nombre o correo duplicado)
+            request.setAttribute("error", e.getMessage());
+            request.getRequestDispatcher("/error.jsp").forward(request, response);
+        }
+    }
+
+    /**
+     * Registra una nueva tienda desde el panel de Administrador.
+     */
+    public void crearTiendaAdmin(HttpServletRequest request,
+                                 HttpServletResponse response)
+            throws ServletException, IOException {
+        try {
+            Tienda nueva = new Tienda();
+            nueva.setNombre(request.getParameter("nombre"));
+            nueva.setPassword(request.getParameter("password"));
+            nueva.setDireccion(request.getParameter("direccion"));
+            nueva.setCiudad(request.getParameter("ciudad"));
+            nueva.setTelefono(request.getParameter("telefono"));
+            nueva.setCorreo(request.getParameter("correo"));
+
+            tiendaService.crearTienda(nueva);
+
+            response.sendRedirect(
+                    request.getContextPath()
+                            + "/tiendas?accion=listarAdmin&registroExitoso=true"
+            );
+
+        } catch (IllegalArgumentException e) {
+            request.setAttribute("error", e.getMessage());
+            request.getRequestDispatcher(
+                    "/Web_Admin/Crear_tienda.jsp"
+            ).forward(request, response);
+
+        } catch (SQLException e) {
             request.setAttribute("error", e.getMessage());
             request.getRequestDispatcher("/error.jsp").forward(request, response);
         }

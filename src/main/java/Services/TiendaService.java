@@ -99,4 +99,14 @@ public class TiendaService {
     public List<Tienda> listarTienda() throws SQLException {
         return tiendaDAO.listar();
     }
+
+    /**
+     * Busca una tienda por su identificador.
+     */
+    public Tienda buscarPorId(int idTienda) throws SQLException {
+        if (idTienda <= 0) {
+            throw new IllegalArgumentException("Id de tienda inválido.");
+        }
+        return tiendaDAO.buscarPorId(idTienda);
+    }
 }

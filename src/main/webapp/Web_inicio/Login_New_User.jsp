@@ -48,6 +48,11 @@
 <main>
 
     <div class="formaro_nuevouser">
+    <% if (request.getAttribute("error") != null) { %>
+        <div class="alert alert-danger text-center shadow-sm">
+            <%= request.getAttribute("error") %>
+        </div>
+    <% } %>
     <form class="row g-3" action="${pageContext.request.contextPath}/proveedores" method="POST" >
 
       <input type="hidden" name="accion" value="crearProveedor">

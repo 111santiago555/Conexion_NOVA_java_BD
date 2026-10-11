@@ -2,8 +2,13 @@
 <%@ page import="Modelo.Proveedor" %>
 
 <%
-    Proveedor proveedor =
-        (Proveedor) session.getAttribute("usuarioLogueado");
+    Object usuarioSesion = session.getAttribute("usuarioLogueado");
+    Proveedor proveedor = (usuarioSesion instanceof Proveedor) ? (Proveedor) usuarioSesion : null;
+
+    if (proveedor == null || !"PROVEEDOR".equals(session.getAttribute("rol"))) {
+        response.sendRedirect(request.getContextPath() + "/Web_inicio/Login.jsp");
+        return;
+    }
 %>
 
 <!DOCTYPE html>

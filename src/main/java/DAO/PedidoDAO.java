@@ -49,7 +49,7 @@ public class PedidoDAO {
 
         try (Connection conexion = Conexion.conectar();
              PreparedStatement ps =
-                     conexion.prepareStatement(SQL)) {
+                     conexion.prepareStatement(SQL, java.sql.Statement.RETURN_GENERATED_KEYS)) {
 
             ps.setString(
                     1,
@@ -84,6 +84,12 @@ public class PedidoDAO {
             );
 
             ps.executeUpdate();
+
+            try (ResultSet rs = ps.getGeneratedKeys()) {
+                if (rs.next()) {
+                    pedido.setIdPedido(rs.getInt(1));
+                }
+            }
 
         }
 
@@ -394,6 +400,61 @@ public class PedidoDAO {
 
         );
 
+    }
+
+    /**
+     * Obtiene los pedidos que pertenecen a un proveedor específico.
+     */
+    public List<Pedido> listarPorProveedor(int idProveedor) throws SQLException {
+        List<Pedido> lista = new ArrayList<>();
+        String SQL = "SELECT * FROM Pedido WHERE IdProveedor=? ORDER BY Fecha DESC";
+
+        try (Connection conexion = Conexion.conectar();
+             PreparedStatement ps = conexion.prepareStatement(SQL)) {
+
+            ps.setInt(1, idProveedor);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    lista.add(mapearPedido(rs));
+                }
+            }
+        }
+        return lista;
+    }
+
+    /**
+     * Obtiene los pedidos que pertenecen a una tienda específica.
+     */
+    public List<Pedido> listarPorTienda(int idTienda) throws SQLException {
+        List<Pedido> lista = new ArrayList<>();
+        String SQL = "SELECT * FROM Pedido WHERE IdTienda=? ORDER BY Fecha DESC";
+
+        try (Connection conexion = Conexion.conectar();
+             PreparedStatement ps = conexion.prepareStatement(SQL)) {
+
+            ps.setInt(1, idTienda);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    lista.add(mapearPedido(rs));
+                }
+            }
+        }
+        return lista;
+    }
+
+    /**
+     * Actualiza únicamente el estado de un pedido (por ejemplo: PENDIENTE, EN PREPARACION, ENVIADO, ENTREGADO).
+     */
+    public void actualizarEstado(int idPedido, String nuevoEstado) throws SQLException {
+        String SQL = "UPDATE Pedido SET Estado=? WHERE IdPedido=?";
+
+        try (Connection conexion = Conexion.conectar();
+             PreparedStatement ps = conexion.prepareStatement(SQL)) {
+
+            ps.setString(1, nuevoEstado);
+            ps.setInt(2, idPedido);
+            ps.executeUpdate();
+        }
     }
 
 }

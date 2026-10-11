@@ -90,7 +90,10 @@
           <a class="nav-link" href="${pageContext.request.contextPath}/proveedores?accion=listarAdmin">Proveedores</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="pedidos.html">Pedidos</a>
+          <a class="nav-link" href="${pageContext.request.contextPath}/tiendas?accion=listarAdmin">Tiendas</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="${pageContext.request.contextPath}/pedidos?accion=listarAdmin">Pedidos</a>
         </li>
       </ul>
     </div>

@@ -215,6 +215,26 @@ public class ProveedorDAO {
         return null;
     }
 
+    /**
+     * Busca un proveedor por su Id.
+     */
+    public Proveedor buscarPorId(int idProveedor) throws SQLException {
+        String SQL = "SELECT * FROM Proveedor WHERE IdProveedor=?";
+
+        try (Connection conexion = Conexion.conectar();
+             PreparedStatement ps = conexion.prepareStatement(SQL)) {
+
+            ps.setInt(1, idProveedor);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return mapearProveedor(rs);
+                }
+            }
+        }
+        return null;
+    }
+
 
     /**
      * Convierte una fila del ResultSet en un objeto Proveedor.

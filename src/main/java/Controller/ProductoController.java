@@ -126,6 +126,10 @@ public class ProductoController extends HttpServlet {
                 listarAdmin(request, response);
                 break;
 
+            case "catalogoTienda":
+                catalogoTienda(request, response);
+                break;
+
             default:
 
                 response.sendRedirect(
@@ -177,6 +181,30 @@ public class ProductoController extends HttpServlet {
 
         }
 
+    }
+
+    /**
+     * Obtiene todos los productos registrados
+     * y los envía a la vista de catálogo para la Tienda.
+     */
+    private void catalogoTienda(
+            HttpServletRequest request,
+            HttpServletResponse response)
+            throws ServletException, IOException {
+        try {
+            List<Producto> lista = productoService.listarProductos();
+            request.setAttribute("lista", lista);
+
+            request.getRequestDispatcher(
+                    "/Web_Tienda/Catalogo.jsp"
+            ).forward(request, response);
+
+        } catch (SQLException e) {
+            throw new ServletException(
+                    "Error al listar los productos para la tienda.",
+                    e
+            );
+        }
     }
 
 

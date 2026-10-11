@@ -1,7 +1,15 @@
 package Controller;
 
+import Modelo.DetallePedido;
 import Modelo.Pedido;
+import Modelo.Producto;
+import Modelo.Proveedor;
+import Modelo.Tienda;
+import Services.DetallePedidoService;
 import Services.PedidoService;
+import Services.ProductoService;
+import Services.ProveedorService;
+import Services.TiendaService;
 import Util.SessionUtil;
 
 import java.io.IOException;
@@ -9,14 +17,18 @@ import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 /**
  * Controlador encargado de gestionar las peticiones relacionadas
@@ -39,6 +51,10 @@ public class PedidoController extends HttpServlet {
      * de los pedidos.
      */
     private final PedidoService pedidoService = new PedidoService();
+    private final DetallePedidoService detallePedidoService = new DetallePedidoService();
+    private final ProductoService productoService = new ProductoService();
+    private final ProveedorService proveedorService = new ProveedorService();
+    private final TiendaService tiendaService = new TiendaService();
 
     /**
      * Formato usado para leer la fecha cuando llega como texto
@@ -80,6 +96,18 @@ public class PedidoController extends HttpServlet {
 
             case "listar":
                 listar(request, response);
+                break;
+
+            case "listarAdmin":
+                listarAdmin(request, response);
+                break;
+
+            case "pedidosProveedor":
+                pedidosProveedor(request, response);
+                break;
+
+            case "misPedidos":
+                misPedidos(request, response);
                 break;
 
             case "buscarPorEstado":
@@ -282,6 +310,14 @@ public class PedidoController extends HttpServlet {
 
         switch (accion) {
 
+            case "confirmarPedido":
+                confirmarPedido(request, response);
+                break;
+
+            case "cambiarEstado":
+                cambiarEstado(request, response);
+                break;
+
             case "crearPedido":
                 crearPedido(request, response);
                 break;
@@ -398,6 +434,180 @@ public class PedidoController extends HttpServlet {
 
         } catch (SQLException e) {
             throw new ServletException("Error al eliminar el pedido.", e);
+        }
+    }
+
+    /**
+     * Lista todos los pedidos para el panel de administración (Rastreo global).
+     */
+    private void listarAdmin(HttpServletRequest request,
+                             HttpServletResponse response)
+            throws ServletException, IOException {
+        try {
+            List<Pedido> lista = pedidoService.listarPedidos();
+            request.setAttribute("listaPedidos", lista);
+            request.getRequestDispatcher("/Web_Admin/Pedidos.jsp").forward(request, response);
+        } catch (SQLException e) {
+            throw new ServletException("Error al listar los pedidos para el administrador.", e);
+        }
+    }
+
+    /**
+     * Lista los pedidos que pertenecen exclusivamente al proveedor autenticado.
+     */
+    private void pedidosProveedor(HttpServletRequest request,
+                                  HttpServletResponse response)
+            throws ServletException, IOException {
+        HttpSession session = request.getSession(false);
+        Object usuario = (session != null) ? session.getAttribute("usuarioLogueado") : null;
+
+        if (!(usuario instanceof Proveedor)) {
+            response.sendRedirect(request.getContextPath() + "/Web_inicio/Login.jsp");
+            return;
+        }
+
+        Proveedor prov = (Proveedor) usuario;
+
+        try {
+            List<Pedido> lista = pedidoService.listarPorProveedor(prov.getIdProveedor());
+            request.setAttribute("listaPedidos", lista);
+            request.getRequestDispatcher("/Web_Proveedor/PedidosProveedor.jsp").forward(request, response);
+        } catch (SQLException e) {
+            throw new ServletException("Error al listar pedidos del proveedor.", e);
+        }
+    }
+
+    /**
+     * Lista los pedidos realizados por la tienda autenticada.
+     */
+    private void misPedidos(HttpServletRequest request,
+                            HttpServletResponse response)
+            throws ServletException, IOException {
+        HttpSession session = request.getSession(false);
+        Object usuario = (session != null) ? session.getAttribute("usuarioLogueado") : null;
+
+        if (!(usuario instanceof Tienda)) {
+            response.sendRedirect(request.getContextPath() + "/Web_inicio/Login.jsp");
+            return;
+        }
+
+        Tienda tienda = (Tienda) usuario;
+
+        try {
+            List<Pedido> lista = pedidoService.listarPorTienda(tienda.getIdTienda());
+            request.setAttribute("listaPedidos", lista);
+            request.getRequestDispatcher("/Web_Tienda/MisPedidos.jsp").forward(request, response);
+        } catch (SQLException e) {
+            throw new ServletException("Error al listar pedidos de la tienda.", e);
+        }
+    }
+
+    /**
+     * Confirma el carrito de compras de la tienda y lo convierte en pedidos y detalles en la BD.
+     */
+    private void confirmarPedido(HttpServletRequest request,
+                                 HttpServletResponse response)
+            throws ServletException, IOException {
+        HttpSession session = request.getSession(false);
+        if (session == null) {
+            response.sendRedirect(request.getContextPath() + "/Web_inicio/Login.jsp");
+            return;
+        }
+
+        Object usuario = session.getAttribute("usuarioLogueado");
+        String rol = (String) session.getAttribute("rol");
+
+        if (!"TIENDA".equals(rol) || !(usuario instanceof Tienda)) {
+            response.sendRedirect(request.getContextPath() + "/Web_inicio/Login.jsp");
+            return;
+        }
+
+        Tienda tienda = (Tienda) usuario;
+        List<DetallePedido> carrito = (List<DetallePedido>) session.getAttribute("carrito");
+
+        if (carrito == null || carrito.isEmpty()) {
+            response.sendRedirect(request.getContextPath() + "/carrito?accion=ver&error=vacio");
+            return;
+        }
+
+        try {
+            // Agrupar items del carrito por IdProveedor del producto
+            Map<Integer, List<DetallePedido>> itemsPorProveedor = new HashMap<>();
+
+            for (DetallePedido item : carrito) {
+                Producto prod = productoService.buscarProductoPorId(item.getIdProducto());
+                if (prod != null) {
+                    int idProv = prod.getIdProveedor();
+                    itemsPorProveedor.computeIfAbsent(idProv, k -> new ArrayList<>()).add(item);
+                }
+            }
+
+            if (itemsPorProveedor.isEmpty()) {
+                response.sendRedirect(request.getContextPath() + "/carrito?accion=ver&error=invalido");
+                return;
+            }
+
+            // Para cada proveedor, crear un pedido
+            for (Map.Entry<Integer, List<DetallePedido>> entry : itemsPorProveedor.entrySet()) {
+                int idProv = entry.getKey();
+                List<DetallePedido> listaItems = entry.getValue();
+
+                BigDecimal totalPedido = BigDecimal.ZERO;
+                for (DetallePedido dp : listaItems) {
+                    totalPedido = totalPedido.add(dp.getSubTotal());
+                }
+
+                String numPedido = "PED-" + (System.currentTimeMillis() % 1000000) + "-" + idProv;
+
+                Pedido nuevoPedido = new Pedido();
+                nuevoPedido.setNumeroPedido(numPedido);
+                nuevoPedido.setIdProveedor(idProv);
+                nuevoPedido.setIdTienda(tienda.getIdTienda());
+                nuevoPedido.setFecha(new Date());
+                nuevoPedido.setEstado("PENDIENTE");
+                nuevoPedido.setTotal(totalPedido);
+
+                // Guarda el pedido y obtiene el IdPedido autogenerado
+                pedidoService.crearPedido(nuevoPedido);
+
+                // Guarda los detalles asociados al pedido
+                for (DetallePedido dp : listaItems) {
+                    dp.setIdPedido(nuevoPedido.getIdPedido());
+                    detallePedidoService.crearDetalle(dp);
+                }
+            }
+
+            // Vaciar el carrito de la sesión
+            session.removeAttribute("carrito");
+
+            response.sendRedirect(request.getContextPath() + "/pedidos?accion=misPedidos&exito=true");
+
+        } catch (SQLException e) {
+            throw new ServletException("Error al confirmar el pedido en la base de datos.", e);
+        }
+    }
+
+    /**
+     * Permite actualizar el estado de rastreo de un pedido (desde Admin o Proveedor).
+     */
+    private void cambiarEstado(HttpServletRequest request,
+                               HttpServletResponse response)
+            throws ServletException, IOException {
+        try {
+            int idPedido = Integer.parseInt(request.getParameter("idPedido"));
+            String nuevoEstado = request.getParameter("nuevoEstado");
+            String origen = request.getParameter("origen");
+
+            pedidoService.actualizarEstado(idPedido, nuevoEstado);
+
+            if ("admin".equalsIgnoreCase(origen)) {
+                response.sendRedirect(request.getContextPath() + "/pedidos?accion=listarAdmin&actualizado=true");
+            } else {
+                response.sendRedirect(request.getContextPath() + "/pedidos?accion=pedidosProveedor&actualizado=true");
+            }
+
+        } catch (SQLException | IllegalArgumentException e) {
+            throw new ServletException("Error al actualizar el estado del pedido.", e);
         }
     }
 }

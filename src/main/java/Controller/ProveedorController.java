@@ -296,16 +296,17 @@ public class ProveedorController extends HttpServlet {
             // Se delega la validacion, el cifrado de la contraseña y el guardado al Service
             proveedorService.crearProveedor(nuevo);
 
-            response.sendRedirect(request.getContextPath() + "/proveedores?accion=listar&registroExitoso=true");
+            HttpSession session = request.getSession(false);
+            String rol = (session != null) ? (String) session.getAttribute("rol") : null;
+            if ("ADMIN".equals(rol)) {
+                response.sendRedirect(request.getContextPath() + "/proveedores?accion=listarAdmin&registroExitoso=true");
+            } else {
+                response.sendRedirect(request.getContextPath() + "/Web_inicio/Login.jsp?registroExitoso=true");
+            }
 
-        }catch(IllegalArgumentException e){
-            // Error de validacion (campo obligatorio vacio, etc.)
+        } catch (IllegalArgumentException | SQLException e) {
             request.setAttribute("error", e.getMessage());
-            request.getRequestDispatcher("/proveedores?accion=listar&registroExitoso=false").forward(request, response);
-        }catch(SQLException e){
-            // Error de base de datos (por ejemplo, codigo de proveedor duplicado)
-            request.setAttribute("error", e.getMessage());
-            request.getRequestDispatcher("/error.jsp").forward(request, response);
+            request.getRequestDispatcher("/Web_inicio/Login_New_User.jsp").forward(request, response);
         }
     }
 
