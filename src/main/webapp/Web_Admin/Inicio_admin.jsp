@@ -23,14 +23,14 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
 </head>
 <body>
-<nav class="navbar navbar-expand-lg bg-primary">
+<nav class="navbar navbar-expand-lg bg-primary navbar-dark">
   <div class="container-fluid">
     <a class="navbar-brand" href="${pageContext.request.contextPath}/Web_Admin/Inicio_admin.jsp">Inicio Administrador</a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarNav">
-      <ul class="navbar-nav">
+      <ul class="navbar-nav me-auto">
         <li class="nav-item">
           <a class="nav-link active" aria-current="page" href="${pageContext.request.contextPath}/productos?accion=listarAdmin">Productos</a>
         </li>
@@ -41,9 +41,12 @@
           <a class="nav-link" href="${pageContext.request.contextPath}/tiendas?accion=listarAdmin">Tiendas</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="${pageContext.request.contextPath}/pedidos?accion=listarAdmin">Pedidos</a>
+            <a class="nav-link" href="${pageContext.request.contextPath}/pedidos?accion=listarAdmin">Pedidos y Rastreo</a>
         </li>
       </ul>
+      <div class="d-flex">
+          <a href="${pageContext.request.contextPath}/auth?accion=logout" class="btn btn-outline-light btn-sm">Cerrar Sesión</a>
+      </div>
     </div>
   </div>
 </nav>

@@ -60,7 +60,7 @@
 
         <div class="collapse navbar-collapse" id="navbarNav">
 
-            <ul class="navbar-nav">
+            <ul class="navbar-nav me-auto">
 
                 <li class="nav-item">
                     <a class="nav-link text-white"
@@ -71,7 +71,7 @@
 
                 <li class="nav-item">
                     <a class="nav-link text-white"
-                       href="${pageContext.request.contextPath}/PedidosProveedor.jsp">
+                       href="${pageContext.request.contextPath}/pedidos?accion=pedidosProveedor">
                         Pedidos
                     </a>
                 </li>
@@ -83,8 +83,11 @@
                     </a>
                 </li>
 
-
             </ul>
+
+            <div class="d-flex">
+                <a href="${pageContext.request.contextPath}/auth?accion=logout" class="btn btn-outline-light btn-sm">Cerrar Sesión</a>
+            </div>
 
         </div>
 

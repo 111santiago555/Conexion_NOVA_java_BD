@@ -3,6 +3,8 @@
 <%@ page import="java.math.BigDecimal" %>
 <%@ page import="Modelo.DetallePedido" %>
 <%@ page import="Modelo.Tienda" %>
+<%@ page import="Modelo.Producto" %>
+<%@ page import="DAO.ProductoDAO" %>
 <%
     Object usuario = session.getAttribute("usuarioLogueado");
     Tienda tiendaLogueada = (usuario instanceof Tienda) ? (Tienda) usuario : null;
@@ -13,6 +15,7 @@
 
     List<DetallePedido> carrito = (List<DetallePedido>) session.getAttribute("carrito");
     BigDecimal totalCarrito = BigDecimal.ZERO;
+    ProductoDAO productoDAO = new ProductoDAO();
 %>
 <!DOCTYPE html>
 <html lang="es">
@@ -45,12 +48,29 @@
           <a class="nav-link" href="${pageContext.request.contextPath}/pedidos?accion=misPedidos">Mis Pedidos</a>
         </li>
       </ul>
+      <div class="d-flex">
+          <span class="navbar-text text-white me-3">
+              Bienvenido, <%= tiendaLogueada.getNombre() %>
+          </span>
+          <a href="${pageContext.request.contextPath}/auth?accion=logout" class="btn btn-outline-light btn-sm">Cerrar Sesión</a>
+      </div>
     </div>
   </div>
 </nav>
 
 <div class="container mt-5">
     <h2 class="mb-4">🛒 Mi Carrito de Compras</h2>
+
+    <% 
+        String errorCarrito = (String) session.getAttribute("errorCarrito");
+        if (errorCarrito != null) { 
+            session.removeAttribute("errorCarrito");
+    %>
+        <div class="alert alert-danger alert-dismissible fade show text-center shadow-sm" role="alert">
+            <strong>⚠️ Atención:</strong> <%= errorCarrito %>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    <% } %>
 
     <% if (carrito == null || carrito.isEmpty()) { %>
         <div class="alert alert-warning text-center">
@@ -59,11 +79,11 @@
             <a href="${pageContext.request.contextPath}/productos?accion=catalogoTienda" class="btn btn-success">Ir al Catálogo</a>
         </div>
     <% } else { %>
-        <div class="table-responsive">
-            <table class="table table-bordered table-striped text-center">
+        <div class="table-responsive shadow-sm">
+            <table class="table table-bordered table-striped text-center align-middle">
                 <thead class="table-dark">
                     <tr>
-                        <th>ID Prod</th>
+                        <th>Producto</th>
                         <th>Precio Unit.</th>
                         <th>Cantidad</th>
                         <th>Subtotal</th>
@@ -73,26 +93,36 @@
                 <tbody>
                 <% for (DetallePedido item : carrito) { 
                     totalCarrito = totalCarrito.add(item.getSubTotal());
+                    Producto prod = null;
+                    try {
+                        prod = productoDAO.buscarPorId(item.getIdProducto());
+                    } catch (Exception ignored) {}
+                    String nombreProd = (prod != null) ? prod.getNombreProducto() : ("Producto #" + item.getIdProducto());
                 %>
                     <tr>
-                        <td><%= item.getIdProducto() %></td>
+                        <td class="text-start ps-3 fw-semibold">
+                            <%= nombreProd %>
+                            <% if (prod != null) { %>
+                                <br><small class="text-muted">Stock disponible: <%= prod.getCantidad() %></small>
+                            <% } %>
+                        </td>
                         <td>$ <%= item.getPrecioUnitario() %></td>
                         <td><%= item.getCantidad() %></td>
-                        <td>$ <%= item.getSubTotal() %></td>
+                        <td class="fw-bold text-success">$ <%= item.getSubTotal() %></td>
                         <td>
                             <form action="${pageContext.request.contextPath}/carrito" method="POST" style="display:inline;">
                                 <input type="hidden" name="accion" value="eliminarItem">
                                 <input type="hidden" name="idProducto" value="<%= item.getIdProducto() %>">
-                                <button type="submit" class="btn btn-sm btn-danger">Quitar</button>
+                                <button type="submit" class="btn btn-sm btn-outline-danger">Quitar</button>
                             </form>
                         </td>
                     </tr>
                 <% } %>
                 </tbody>
                 <tfoot>
-                    <tr class="table-success fw-bold">
-                        <td colspan="3" class="text-end">TOTAL:</td>
-                        <td colspan="2">$ <%= totalCarrito %></td>
+                    <tr class="table-success fw-bold fs-5">
+                        <td colspan="3" class="text-end pe-3">TOTAL A PAGAR:</td>
+                        <td colspan="2" class="text-start ps-3">$ <%= totalCarrito %></td>
                     </tr>
                 </tfoot>
             </table>

@@ -531,6 +531,22 @@ public class PedidoController extends HttpServlet {
         }
 
         try {
+            // 1. Validar disponibilidad y stock suficiente antes de proceder
+            for (DetallePedido item : carrito) {
+                Producto prod = productoService.buscarProductoPorId(item.getIdProducto());
+                if (prod == null) {
+                    session.setAttribute("errorCarrito", "Uno de los productos seleccionados ya no se encuentra disponible.");
+                    response.sendRedirect(request.getContextPath() + "/carrito?accion=ver");
+                    return;
+                }
+                if (prod.getCantidad() < item.getCantidad()) {
+                    session.setAttribute("errorCarrito", "Stock insuficiente para '" + prod.getNombreProducto()
+                            + "'. Disponibles: " + prod.getCantidad() + ", solicitados: " + item.getCantidad() + ".");
+                    response.sendRedirect(request.getContextPath() + "/carrito?accion=ver");
+                    return;
+                }
+            }
+
             // Agrupar items del carrito por IdProveedor del producto
             Map<Integer, List<DetallePedido>> itemsPorProveedor = new HashMap<>();
 
@@ -570,10 +586,13 @@ public class PedidoController extends HttpServlet {
                 // Guarda el pedido y obtiene el IdPedido autogenerado
                 pedidoService.crearPedido(nuevoPedido);
 
-                // Guarda los detalles asociados al pedido
+                // Guarda los detalles asociados al pedido y descuenta el stock del producto
                 for (DetallePedido dp : listaItems) {
                     dp.setIdPedido(nuevoPedido.getIdPedido());
                     detallePedidoService.crearDetalle(dp);
+
+                    // Descontar la cantidad del stock del producto en la base de datos
+                    productoService.descontarStock(dp.getIdProducto(), dp.getCantidad());
                 }
             }
 
@@ -598,7 +617,31 @@ public class PedidoController extends HttpServlet {
             String nuevoEstado = request.getParameter("nuevoEstado");
             String origen = request.getParameter("origen");
 
+            Pedido pedidoActual = pedidoService.buscarPorId(idPedido);
+            String estadoAnterior = (pedidoActual != null && pedidoActual.getEstado() != null)
+                    ? pedidoActual.getEstado().toUpperCase()
+                    : "";
+
+            // Actualiza el estado en la base de datos
             pedidoService.actualizarEstado(idPedido, nuevoEstado);
+
+            // Si el pedido pasa a CANCELADO y no estaba cancelado, reponemos el stock de los productos
+            if (!"CANCELADO".equals(estadoAnterior) && "CANCELADO".equalsIgnoreCase(nuevoEstado)) {
+                List<DetallePedido> detalles = detallePedidoService.listarPorPedido(idPedido);
+                if (detalles != null) {
+                    for (DetallePedido dp : detalles) {
+                        productoService.reponerStock(dp.getIdProducto(), dp.getCantidad());
+                    }
+                }
+            } else if ("CANCELADO".equals(estadoAnterior) && !"CANCELADO".equalsIgnoreCase(nuevoEstado)) {
+                // Si se reactiva un pedido cancelado, se vuelve a descontar el stock
+                List<DetallePedido> detalles = detallePedidoService.listarPorPedido(idPedido);
+                if (detalles != null) {
+                    for (DetallePedido dp : detalles) {
+                        productoService.descontarStock(dp.getIdProducto(), dp.getCantidad());
+                    }
+                }
+            }
 
             if ("admin".equalsIgnoreCase(origen)) {
                 response.sendRedirect(request.getContextPath() + "/pedidos?accion=listarAdmin&actualizado=true");

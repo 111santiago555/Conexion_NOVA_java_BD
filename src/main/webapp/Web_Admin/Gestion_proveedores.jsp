@@ -64,14 +64,14 @@
 =====================================================
 -->
 
-<nav class="navbar navbar-expand-lg bg-primary">
+<nav class="navbar navbar-expand-lg bg-primary navbar-dark">
   <div class="container-fluid">
     <a class="navbar-brand" href="${pageContext.request.contextPath}/Web_Admin/Inicio_admin.jsp">Inicio Administrador</a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarNav">
-      <ul class="navbar-nav">
+      <ul class="navbar-nav me-auto">
         <li class="nav-item">
           <a class="nav-link active" aria-current="page" href="${pageContext.request.contextPath}/productos?accion=listarAdmin">Productos</a>
         </li>
@@ -82,9 +82,12 @@
           <a class="nav-link" href="${pageContext.request.contextPath}/tiendas?accion=listarAdmin">Tiendas</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="${pageContext.request.contextPath}/pedidos?accion=listarAdmin">Pedidos</a>
+            <a class="nav-link" href="${pageContext.request.contextPath}/pedidos?accion=listarAdmin">Pedidos y Rastreo</a>
         </li>
       </ul>
+      <div class="d-flex">
+          <a href="${pageContext.request.contextPath}/auth?accion=logout" class="btn btn-outline-light btn-sm">Cerrar Sesión</a>
+      </div>
     </div>
   </div>
 </nav>

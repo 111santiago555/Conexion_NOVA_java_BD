@@ -38,7 +38,7 @@
       <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarNav">
-      <ul class="navbar-nav">
+      <ul class="navbar-nav me-auto">
         <li class="nav-item">
           <a class="nav-link" href="${pageContext.request.contextPath}/productos?accion=listarAdmin">Productos</a>
         </li>
@@ -52,6 +52,9 @@
           <a class="nav-link" href="${pageContext.request.contextPath}/pedidos?accion=listarAdmin">Pedidos y Rastreo</a>
         </li>
       </ul>
+      <div class="d-flex">
+          <a href="${pageContext.request.contextPath}/auth?accion=logout" class="btn btn-outline-light btn-sm">Cerrar Sesión</a>
+      </div>
     </div>
   </div>
 </nav>

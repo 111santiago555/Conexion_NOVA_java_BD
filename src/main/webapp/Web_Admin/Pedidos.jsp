@@ -127,9 +127,9 @@
                                 String estado = p.getEstado() != null ? p.getEstado().toUpperCase() : "PENDIENTE";
                                 String badge = "bg-secondary";
                                 if ("PENDIENTE".equals(estado)) badge = "bg-warning text-dark";
-                                else if ("EN PROCESO".equals(estado) || "EN PREPARACION".equals(estado)) badge = "bg-info text-dark";
+                                else if ("CONFIRMADO".equals(estado) || "EN PREPARACION".equals(estado)) badge = "bg-info text-dark";
                                 else if ("ENVIADO".equals(estado)) badge = "bg-primary";
-                                else if ("ENTREGADO".equals(estado)) badge = "bg-success";
+                                else if ("RECIBIDO".equals(estado)) badge = "bg-success";
                                 else if ("CANCELADO".equals(estado)) badge = "bg-danger";
                     %>
                             <tr>
@@ -151,9 +151,9 @@
                                         <input type="hidden" name="idPedido" value="<%= p.getIdPedido() %>">
                                         <select name="nuevoEstado" class="form-select form-select-sm" style="width: auto;">
                                             <option value="PENDIENTE" <%= "PENDIENTE".equals(estado) ? "selected" : "" %>>PENDIENTE</option>
-                                            <option value="EN PROCESO" <%= "EN PROCESO".equals(estado) ? "selected" : "" %>>EN PROCESO</option>
+                                            <option value="CONFIRMADO" <%= "CONFIRMADO".equals(estado) ? "selected" : "" %>>CONFIRMADO</option>
                                             <option value="ENVIADO" <%= "ENVIADO".equals(estado) ? "selected" : "" %>>ENVIADO</option>
-                                            <option value="ENTREGADO" <%= "ENTREGADO".equals(estado) ? "selected" : "" %>>ENTREGADO</option>
+                                            <option value="RECIBIDO" <%= "RECIBIDO".equals(estado) ? "selected" : "" %>>RECIBIDO</option>
                                             <option value="CANCELADO" <%= "CANCELADO".equals(estado) ? "selected" : "" %>>CANCELADO</option>
                                         </select>
                                         <button type="submit" class="btn btn-sm btn-outline-primary">Actualizar</button>

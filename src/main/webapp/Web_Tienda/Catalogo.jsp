@@ -69,6 +69,17 @@
         </div>
     <% } %>
 
+    <% 
+        String errorStockCatalogo = (String) session.getAttribute("errorStockCatalogo");
+        if (errorStockCatalogo != null) { 
+            session.removeAttribute("errorStockCatalogo");
+    %>
+        <div class="alert alert-warning alert-dismissible fade show text-center" role="alert">
+            <strong>⚠️ Atención:</strong> <%= errorStockCatalogo %>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    <% } %>
+
     <div class="row g-4">
     <%
         if (lista != null && !lista.isEmpty()) {

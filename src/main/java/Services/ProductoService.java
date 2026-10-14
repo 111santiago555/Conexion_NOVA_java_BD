@@ -546,4 +546,39 @@ public class ProductoService {
 
     }
 
+    /**
+     * Descuenta del stock disponible de un producto.
+     *
+     * @param idProducto Identificador del producto.
+     * @param cantidad Cantidad a descontar.
+     * @return true si se descontó con éxito, false si no hay suficiente stock.
+     * @throws SQLException Si ocurre un error en la base de datos.
+     */
+    public boolean descontarStock(int idProducto, int cantidad) throws SQLException {
+        if (idProducto <= 0) {
+            throw new IllegalArgumentException("Identificador de producto inválido.");
+        }
+        if (cantidad <= 0) {
+            throw new IllegalArgumentException("La cantidad a descontar debe ser mayor que cero.");
+        }
+        return productoDAO.descontarStock(idProducto, cantidad);
+    }
+
+    /**
+     * Repone unidades al stock de un producto.
+     *
+     * @param idProducto Identificador del producto.
+     * @param cantidad Cantidad a reponer.
+     * @throws SQLException Si ocurre un error en la base de datos.
+     */
+    public void reponerStock(int idProducto, int cantidad) throws SQLException {
+        if (idProducto <= 0) {
+            throw new IllegalArgumentException("Identificador de producto inválido.");
+        }
+        if (cantidad <= 0) {
+            throw new IllegalArgumentException("La cantidad a reponer debe ser mayor que cero.");
+        }
+        productoDAO.reponerStock(idProducto, cantidad);
+    }
+
 }

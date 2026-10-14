@@ -93,7 +93,12 @@ public class AdminnService {
 
         validarAdmin(admin);
 
+        String password = PasswordUtil.cifrar(admin.getPassword());
+
+        admin.setPassword(password);
+
         adminNDAO.crear(admin);
+
     }
 
     /**

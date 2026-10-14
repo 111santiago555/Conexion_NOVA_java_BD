@@ -376,4 +376,47 @@ public class ProductoDAO {
 
     }
 
+    /**
+     * Descuenta stock de un producto asegurando que la cantidad no quede en negativo.
+     *
+     * @param idProducto Identificador del producto.
+     * @param cantidad Cantidad a descontar.
+     * @return true si se actualizó el stock, false si no había stock suficiente.
+     * @throws SQLException Si ocurre un error en la base de datos.
+     */
+    public boolean descontarStock(int idProducto, int cantidad) throws SQLException {
+        String SQL = "UPDATE Producto SET Cantidad = Cantidad - ? WHERE IdProducto = ? AND Cantidad >= ?";
+
+        try (Connection conexion = Conexion.conectar();
+             PreparedStatement ps = conexion.prepareStatement(SQL)) {
+
+            ps.setInt(1, cantidad);
+            ps.setInt(2, idProducto);
+            ps.setInt(3, cantidad);
+
+            int filas = ps.executeUpdate();
+            return filas > 0;
+        }
+    }
+
+    /**
+     * Incrementa o repone stock a un producto (por ejemplo al cancelar un pedido).
+     *
+     * @param idProducto Identificador del producto.
+     * @param cantidad Cantidad a reponer.
+     * @throws SQLException Si ocurre un error en la base de datos.
+     */
+    public void reponerStock(int idProducto, int cantidad) throws SQLException {
+        String SQL = "UPDATE Producto SET Cantidad = Cantidad + ? WHERE IdProducto = ?";
+
+        try (Connection conexion = Conexion.conectar();
+             PreparedStatement ps = conexion.prepareStatement(SQL)) {
+
+            ps.setInt(1, cantidad);
+            ps.setInt(2, idProducto);
+
+            ps.executeUpdate();
+        }
+    }
+
 }

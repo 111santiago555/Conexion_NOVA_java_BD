@@ -69,6 +69,28 @@ public class CarritoController extends HttpServlet {
 
                 Producto producto = productoService.buscarProductoPorId(idProducto);
                 if (producto != null) {
+                    int cantidadActualEnCarrito = 0;
+                    for (DetallePedido dp : carrito) {
+                        if (dp.getIdProducto() == idProducto) {
+                            cantidadActualEnCarrito = dp.getCantidad();
+                            break;
+                        }
+                    }
+
+                    // Validar que la cantidad solicitada no exceda el stock disponible
+                    if (cantidadActualEnCarrito + cantidad > producto.getCantidad()) {
+                        String msg = "No puedes agregar " + cantidad + " unidades de '" + producto.getNombreProducto() 
+                                + "'. Stock disponible: " + producto.getCantidad();
+                        if (cantidadActualEnCarrito > 0) {
+                            msg += " (ya tienes " + cantidadActualEnCarrito + " en el carrito).";
+                        } else {
+                            msg += ".";
+                        }
+                        session.setAttribute("errorStockCatalogo", msg);
+                        response.sendRedirect(request.getContextPath() + "/productos?accion=catalogoTienda");
+                        return;
+                    }
+
                     boolean existe = false;
                     // Buscar si ya está en el carrito para sumar cantidad
                     for (DetallePedido dp : carrito) {
@@ -87,7 +109,6 @@ public class CarritoController extends HttpServlet {
                         nuevoDetalle.setSubTotal(producto.getPrecioActual().multiply(new BigDecimal(cantidad)));
                         
                         // Guardamos el nombre temporalmente en un atributo para poder mostrarlo
-                        // (Nota: DetallePedido no tiene nombre de producto, pero es util para la vista)
                         request.setAttribute("nombreTemporal", producto.getNombreProducto());
                         
                         carrito.add(nuevoDetalle);

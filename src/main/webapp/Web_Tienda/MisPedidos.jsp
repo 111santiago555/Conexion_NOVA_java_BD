@@ -86,7 +86,7 @@
                         String badgeClass = "bg-secondary";
                         String estado = p.getEstado() != null ? p.getEstado().toUpperCase() : "PENDIENTE";
                         if ("PENDIENTE".equals(estado)) badgeClass = "bg-warning text-dark";
-                        else if ("EN PROCESO".equals(estado) || "EN PREPARACION".equals(estado)) badgeClass = "bg-info text-dark";
+                        else if ("CONFIRMADO".equals(estado) || "EN PREPARACION".equals(estado)) badgeClass = "bg-info text-dark";
                         else if ("ENVIADO".equals(estado)) badgeClass = "bg-primary";
                         else if ("ENTREGADO".equals(estado)) badgeClass = "bg-success";
                         else if ("CANCELADO".equals(estado)) badgeClass = "bg-danger";
