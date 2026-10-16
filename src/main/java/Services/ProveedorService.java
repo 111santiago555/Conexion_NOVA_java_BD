@@ -94,10 +94,6 @@ public class ProveedorService {
             throw new IllegalArgumentException("El nombre es obligatorio.");
         }
 
-        if (proveedor.getCodigo() == null || proveedor.getCodigo().trim().isEmpty()) {
-            throw new IllegalArgumentException("El código es obligatorio.");
-        }
-
         if (proveedor.getDireccion() == null || proveedor.getDireccion().trim().isEmpty()) {
             throw new IllegalArgumentException("La dirección es obligatoria.");
         }

@@ -40,57 +40,37 @@
     </div>
 </nav>
 
-<!-- Barra de navegación -->
-<nav class="navbar navbar-expand-lg bg-primary">
+<!-- BARRA DE NAVEGACIÓN -->
+<nav class="navbar navbar-expand-lg bg-primary navbar-dark">
     <div class="container-fluid">
-
-        <a class="navbar-brand text-white"
-             href="${pageContext.request.contextPath}/proveedores?accion=listar">
-             Inicio Proveedores
+        <a class="navbar-brand text-white" href="${pageContext.request.contextPath}/proveedores?accion=listar">
+            Inicio Proveedores
         </a>
-
-        <button class="navbar-toggler"
-                type="button"
-                data-bs-toggle="collapse"
-                data-bs-target="#navbarNav">
-
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
             <span class="navbar-toggler-icon"></span>
-
         </button>
-
         <div class="collapse navbar-collapse" id="navbarNav">
-
             <ul class="navbar-nav me-auto">
-
                 <li class="nav-item">
-                    <a class="nav-link text-white"
-                       href="${pageContext.request.contextPath}/productos?accion=listar">
+                    <a class="nav-link text-white" href="${pageContext.request.contextPath}/productos?accion=listar">
                         Productos
                     </a>
                 </li>
-
                 <li class="nav-item">
-                    <a class="nav-link text-white"
-                       href="${pageContext.request.contextPath}/pedidos?accion=pedidosProveedor">
+                    <a class="nav-link active text-white" href="${pageContext.request.contextPath}/pedidos?accion=pedidosProveedor">
                         Pedidos
                     </a>
                 </li>
-
                 <li class="nav-item">
-                    <a class="nav-link text-white"
-                        href="${pageContext.request.contextPath}/Web_Proveedor/Actulizar_proveedor.jsp">
-                        Actualizar Proveedor
+                    <a class="nav-link text-white" href="${pageContext.request.contextPath}/Web_Proveedor/Actulizar_proveedor.jsp">
+                        Actualizar Perfil
                     </a>
                 </li>
-
             </ul>
-
             <div class="d-flex">
                 <a href="${pageContext.request.contextPath}/auth?accion=logout" class="btn btn-outline-light btn-sm">Cerrar Sesión</a>
             </div>
-
         </div>
-
     </div>
 </nav>
 
@@ -115,26 +95,13 @@
                        name="accion"
                        value="actualizarProveedor">
 
-                <!-- Código -->
+
 
                 <input type="hidden"
                        name="idProveedor"
                            value="<%= proveedor.getIdProveedor() %>">
 
 
-                <div class="mb-3">
-
-                    <label class="form-label">
-                        Código (NIT)
-                    </label>
-
-                    <input type="text"
-                           class="form-control"
-                           name="codigo"
-                           value="<%= proveedor != null ? proveedor.getCodigo() : "" %>"
-                           readonly>
-
-                </div>
 
                 <!-- Nombre -->
                 <div class="mb-3">

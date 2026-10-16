@@ -44,6 +44,12 @@
         <li class="nav-item">
           <a class="nav-link active" href="${pageContext.request.contextPath}/pedidos?accion=misPedidos">Mis Pedidos</a>
         </li>
+        <li class="nav-item">
+          <a class="nav-link" href="${pageContext.request.contextPath}/inventario?accion=listar">Mi Inventario</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="${pageContext.request.contextPath}/pos">Punto de Venta</a>
+        </li>
       </ul>
       <div class="d-flex">
           <span class="navbar-text text-white me-3">

@@ -6,6 +6,7 @@ import Modelo.Producto;
 import Modelo.Proveedor;
 import Modelo.Tienda;
 import Services.DetallePedidoService;
+import Services.InventarioService;
 import Services.PedidoService;
 import Services.ProductoService;
 import Services.ProveedorService;
@@ -55,6 +56,7 @@ public class PedidoController extends HttpServlet {
     private final ProductoService productoService = new ProductoService();
     private final ProveedorService proveedorService = new ProveedorService();
     private final TiendaService tiendaService = new TiendaService();
+    private final InventarioService inventarioService = new InventarioService();
 
     /**
      * Formato usado para leer la fecha cuando llega como texto
@@ -639,6 +641,18 @@ public class PedidoController extends HttpServlet {
                 if (detalles != null) {
                     for (DetallePedido dp : detalles) {
                         productoService.descontarStock(dp.getIdProducto(), dp.getCantidad());
+                    }
+                }
+            }
+
+            // Si el pedido pasa a RECIBIDO o ENTREGADO, sumamos las unidades al inventario de la tienda
+            boolean eraRecibido = "RECIBIDO".equals(estadoAnterior) || "ENTREGADO".equals(estadoAnterior);
+            boolean esRecibido = "RECIBIDO".equalsIgnoreCase(nuevoEstado) || "ENTREGADO".equalsIgnoreCase(nuevoEstado);
+            if (!eraRecibido && esRecibido) {
+                List<DetallePedido> detalles = detallePedidoService.listarPorPedido(idPedido);
+                if (detalles != null && pedidoActual != null) {
+                    for (DetallePedido dp : detalles) {
+                        inventarioService.sumarStock(pedidoActual.getIdTienda(), dp.getIdProducto(), dp.getCantidad());
                     }
                 }
             }

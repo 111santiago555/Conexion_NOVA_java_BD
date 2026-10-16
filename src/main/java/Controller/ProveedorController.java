@@ -361,7 +361,6 @@ public class ProveedorController extends HttpServlet {
 
             actualizar.setNombre(request.getParameter("nombre"));
             actualizar.setDireccion(request.getParameter("direccion"));
-            actualizar.setCodigo(request.getParameter("codigo"));
             actualizar.setContacto(request.getParameter("contacto"));
             actualizar.setCorreo(request.getParameter("correo"));
 

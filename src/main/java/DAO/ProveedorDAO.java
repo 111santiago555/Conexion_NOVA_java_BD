@@ -101,7 +101,7 @@ public class ProveedorDAO {
 
 
         String SQL = "UPDATE Proveedor SET " +
-                "Codigo=?, Nombre=?, Contacto=?, Correo=?, Direccion=? " +
+                "Nombre=?, Contacto=?, Correo=?, Direccion=? " +
                 "WHERE IdProveedor=?";
 
 
@@ -109,13 +109,12 @@ public class ProveedorDAO {
              PreparedStatement ps = conexion.prepareStatement(SQL)) {
 
 
-            ps.setString(1, proveedor.getCodigo());
-            ps.setString(2, proveedor.getNombre());
+            ps.setString(1, proveedor.getNombre());
             //ps.setString(3, proveedor.getPassword()); // La contraseña se actualiza por un proceso separado, no aqui
-            ps.setString(3, proveedor.getContacto());
-            ps.setString(4, proveedor.getCorreo());
-            ps.setString(5, proveedor.getDireccion());
-            ps.setInt(6, proveedor.getIdProveedor());
+            ps.setString(2, proveedor.getContacto());
+            ps.setString(3, proveedor.getCorreo());
+            ps.setString(4, proveedor.getDireccion());
+            ps.setInt(5, proveedor.getIdProveedor());
 
 
             ps.executeUpdate();

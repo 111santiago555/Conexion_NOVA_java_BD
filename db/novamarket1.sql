@@ -265,6 +265,49 @@ LOCK TABLES `tienda` WRITE;
 INSERT INTO `tienda` VALUES (1,'Nova Market Centro','12','Calle 10 #15-20','Tuluá','3101234567','centro@novamarket.com','ACTIVA');
 /*!40000 ALTER TABLE `tienda` ENABLE KEYS */;
 UNLOCK TABLES;
+
+--
+-- Table structure for table `venta`
+--
+
+DROP TABLE IF EXISTS `venta`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `venta` (
+  `IdVenta` int NOT NULL AUTO_INCREMENT,
+  `NumeroVenta` varchar(50) NOT NULL,
+  `IdTienda` int NOT NULL,
+  `Fecha` datetime DEFAULT CURRENT_TIMESTAMP,
+  `Total` decimal(10,2) NOT NULL,
+  `MetodoPago` varchar(50) DEFAULT 'EFECTIVO',
+  PRIMARY KEY (`IdVenta`),
+  KEY `FK_Venta_Tienda` (`IdTienda`),
+  CONSTRAINT `FK_Venta_Tienda` FOREIGN KEY (`IdTienda`) REFERENCES `tienda` (`IdTienda`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `detalleventa`
+--
+
+DROP TABLE IF EXISTS `detalleventa`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `detalleventa` (
+  `IdDetalleVenta` int NOT NULL AUTO_INCREMENT,
+  `IdVenta` int NOT NULL,
+  `IdProducto` int NOT NULL,
+  `Cantidad` int NOT NULL,
+  `PrecioUnitario` decimal(10,2) NOT NULL,
+  `SubTotal` decimal(10,2) NOT NULL,
+  PRIMARY KEY (`IdDetalleVenta`),
+  KEY `FK_DetalleVenta_Venta` (`IdVenta`),
+  KEY `FK_DetalleVenta_Producto` (`IdProducto`),
+  CONSTRAINT `FK_DetalleVenta_Venta` FOREIGN KEY (`IdVenta`) REFERENCES `venta` (`IdVenta`) ON DELETE CASCADE,
+  CONSTRAINT `FK_DetalleVenta_Producto` FOREIGN KEY (`IdProducto`) REFERENCES `producto` (`IdProducto`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -275,4 +318,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2026-09-09 20:23:37
+-- Dump completed on 2026-10-15 21:25:00

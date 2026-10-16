@@ -33,7 +33,6 @@
           <a class="nav-link active" href="${pageContext.request.contextPath}/Web_Tienda/Inicio_tienda.jsp">Inicio</a>
         </li>
         <li class="nav-item">
-          <!-- TODO: Endpoint para que la tienda vea todos los productos -->
           <a class="nav-link" href="${pageContext.request.contextPath}/productos?accion=catalogoTienda">Catálogo de Productos</a>
         </li>
         <li class="nav-item">
@@ -41,6 +40,12 @@
         </li>
         <li class="nav-item">
           <a class="nav-link" href="${pageContext.request.contextPath}/pedidos?accion=misPedidos">Mis Pedidos</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="${pageContext.request.contextPath}/inventario?accion=listar">Mi Inventario</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="${pageContext.request.contextPath}/pos">Punto de Venta</a>
         </li>
       </ul>
       <div class="d-flex">
@@ -57,35 +62,53 @@
     <div class="row text-center">
         <div class="col-12 mb-4">
             <h1 class="display-4">¡Bienvenido a tu panel de Tienda!</h1>
-            <p class="lead">Desde aquí podrás explorar el catálogo de proveedores, armar tu carrito de compras y realizar pedidos.</p>
+            <p class="lead">Desde aquí podrás explorar el catálogo de proveedores, realizar pedidos, gestionar tu inventario y realizar ventas en tu punto de venta (POS).</p>
         </div>
     </div>
 
-    <div class="row g-4 mt-2">
-        <div class="col-md-4">
+    <div class="row g-4 mt-2 justify-content-center">
+        <div class="col-md-4 col-lg">
             <div class="card shadow h-100 border-success">
-                <div class="card-body text-center">
+                <div class="card-body text-center d-flex flex-column">
                     <h3 class="card-title text-success">🛒 Catálogo</h3>
-                    <p class="card-text">Explora todos los productos publicados por nuestros proveedores autorizados.</p>
-                    <a href="${pageContext.request.contextPath}/productos?accion=catalogoTienda" class="btn btn-success mt-auto">Ver Productos</a>
+                    <p class="card-text">Explora los productos de proveedores para abastecerte.</p>
+                    <a href="${pageContext.request.contextPath}/productos?accion=catalogoTienda" class="btn btn-success mt-auto">Ver Catálogo</a>
                 </div>
             </div>
         </div>
-        <div class="col-md-4">
+        <div class="col-md-4 col-lg">
             <div class="card shadow h-100 border-success">
-                <div class="card-body text-center">
-                    <h3 class="card-title text-success">🛍️ Mi Carrito</h3>
-                    <p class="card-text">Revisa los productos que has seleccionado antes de confirmar tu pedido final.</p>
+                <div class="card-body text-center d-flex flex-column">
+                    <h3 class="card-title text-success">🛍️ Carrito</h3>
+                    <p class="card-text">Revisa los productos que has seleccionado antes de confirmar.</p>
                     <a href="${pageContext.request.contextPath}/carrito?accion=ver" class="btn btn-success mt-auto">Ir al Carrito</a>
                 </div>
             </div>
         </div>
-        <div class="col-md-4">
+        <div class="col-md-4 col-lg">
             <div class="card shadow h-100 border-success">
-                <div class="card-body text-center">
-                    <h3 class="card-title text-success">📦 Mis Pedidos</h3>
-                    <p class="card-text">Consulta el historial de pedidos que has realizado y su estado actual.</p>
-                    <a href="${pageContext.request.contextPath}/pedidos?accion=misPedidos" class="btn btn-success mt-auto">Ver Historial</a>
+                <div class="card-body text-center d-flex flex-column">
+                    <h3 class="card-title text-success">📦 Pedidos</h3>
+                    <p class="card-text">Monitorea el estado de tus solicitudes a los proveedores.</p>
+                    <a href="${pageContext.request.contextPath}/pedidos?accion=misPedidos" class="btn btn-success mt-auto">Mis Pedidos</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 col-lg">
+            <div class="card shadow h-100 border-success">
+                <div class="card-body text-center d-flex flex-column">
+                    <h3 class="card-title text-success">📊 Inventario</h3>
+                    <p class="card-text">Controla el stock físico disponible en tu local y alertas.</p>
+                    <a href="${pageContext.request.contextPath}/inventario?accion=listar" class="btn btn-success mt-auto">Mi Inventario</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 col-lg">
+            <div class="card shadow h-100 border-success">
+                <div class="card-body text-center d-flex flex-column">
+                    <h3 class="card-title text-success">💳 POS / Caja</h3>
+                    <p class="card-text">Vende productos y descuenta stock automáticamente.</p>
+                    <a href="${pageContext.request.contextPath}/pos" class="btn btn-success mt-auto">Punto de Venta</a>
                 </div>
             </div>
         </div>
