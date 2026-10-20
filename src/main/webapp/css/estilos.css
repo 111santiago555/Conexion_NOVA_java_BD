@@ -1,23 +1,502 @@
-main{
+/* ==========================================================================
+   NOVAMARKET DESIGN SYSTEM (estilos.css)
+   ========================================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
+@import url('https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css');
+
+/* --- VARIABLES Y TOKENS DE DISEÑO --- */
+:root {
+    --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    --font-mono: 'JetBrains Mono', monospace;
+
+    /* Superficies y Neutros */
+    --canvas-bg: #f8fafc;
+    --surface-card: #ffffff;
+    --text-primary: #0f172a;
+    --text-secondary: #475569;
+    --border-color: #e2e8f0;
+
+    /* Colores de Marca */
+    --color-tienda: #198754;       /* Verde Tienda Bootstrap */
+    --color-tienda-hover: #157347;
+    --color-admin: #0d6efd;        /* Azul Admin */
+    --color-admin-hover: #0b5ed7;
+    --color-proveedor: #0284c7;    /* Azul Proveedor */
+    --color-proveedor-hover: #0369a1;
+
+    /* Elevación */
+    --shadow-sm: 0 1px 3px 0 rgba(15, 23, 42, 0.08);
+    --shadow-card: 0 4px 6px -1px rgba(15, 23, 42, 0.06), 0 2px 4px -2px rgba(15, 23, 42, 0.04);
+    --shadow-card-hover: 0 10px 15px -3px rgba(15, 23, 42, 0.08);
+
+    --radius-sm: 8px;
+    --radius-md: 12px;
+    --radius-pill: 9999px;
+    --transition-fast: all 0.15s ease-in-out;
+}
+
+/* --- REGLAS BASE --- */
+*, *::before, *::after {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--font-sans);
+    background-color: var(--canvas-bg);
+    color: var(--text-primary);
+    -webkit-font-smoothing: antialiased;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Restricción global para evitar imágenes gigantes */
+img {
+    max-width: 100%;
+    height: auto;
+}
+
+#logo_index {
+    width: 180px !important;
+    height: 180px !important;
+    max-width: 180px !important;
+    max-height: 180px !important;
+    object-fit: cover !important;
+    border-radius: 50% !important;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12) !important;
+    display: block;
+    margin: 20px auto 10px;
+    background-color: #ffffff;
+}
+
+/* Tipografía de precisión */
+h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
+    font-family: var(--font-sans);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: var(--text-primary);
+}
+
+.tabular-nums,
+.table td,
+.price-tag {
+    font-variant-numeric: tabular-nums;
+    font-feature-settings: "tnum";
+}
+
+/* --- CONTENEDOR PRINCIPAL <main> --- */
+main {
     max-width: 1200px;
     margin: 30px auto;
     padding: 30px;
-    background-color: #f8f9fa; /* Gris muy claro */
+    background-color: #f8f9fa;
     border-radius: 12px;
     box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+    width: calc(100% - 40px);
+    flex: 1 0 auto;
 }
 
-/* Responsive */
-@media (max-width: 768px){
-    main{
-        margin: 20px;
+@media (max-width: 768px) {
+    main {
+        margin: 16px auto;
         padding: 20px;
+        width: calc(100% - 20px);
     }
 }
 
-@media (max-width: 576px){
-    main{
-        margin: 10px;
-        padding: 15px;
-    }
+/* ==========================================================================
+   BARRAS DE NAVEGACIÓN Y REGLAS DE VISIBILIDAD DE LETRAS
+   ========================================================================== */
+
+/* Navbar de Tienda (Verde) */
+nav.bg-success,
+.navbar.bg-success,
+.navbar-tienda {
+    background-color: #198754 !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* Navbar de Admin, Proveedor y Web_inicio (Azul) */
+nav.bg-primary,
+.navbar.bg-primary,
+.navbar-proveedor,
+.navbar-admin,
+.navbar-novamarket {
+    background-color: #0d6efd !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* FORZAR que todas las letras del menú de navegación sean 100% blancas y nítidas */
+nav.bg-success .nav-link,
+.navbar.bg-success .nav-link,
+.navbar-tienda .nav-link,
+.navbar-dark .nav-link,
+.navbar-dark .navbar-nav .nav-link {
+    color: #ffffff !important;
+    opacity: 0.95 !important;
+    font-weight: 500 !important;
+    font-size: 0.95rem !important;
+    padding: 0.5rem 0.85rem !important;
+    border-radius: var(--radius-sm);
+    transition: var(--transition-fast);
+}
+
+nav.bg-success .nav-link:hover,
+.navbar.bg-success .nav-link:hover,
+.navbar-tienda .nav-link:hover,
+.navbar-dark .nav-link:hover {
+    color: #ffffff !important;
+    opacity: 1 !important;
+    background-color: rgba(255, 255, 255, 0.2) !important;
+}
+
+nav.bg-success .nav-link.active,
+.navbar.bg-success .nav-link.active,
+.navbar-tienda .nav-link.active,
+.navbar-dark .nav-link.active {
+    color: #ffffff !important;
+    background-color: rgba(255, 255, 255, 0.28) !important;
+    font-weight: 700 !important;
+}
+
+nav.bg-success .navbar-brand,
+.navbar.bg-success .navbar-brand,
+.navbar-tienda .navbar-brand,
+nav.bg-primary .navbar-brand,
+.navbar-dark .navbar-brand {
+    color: #ffffff !important;
+    font-weight: 700 !important;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+nav.bg-success .navbar-text,
+.navbar.bg-success .navbar-text,
+.navbar-tienda .navbar-text {
+    color: #ffffff !important;
+    font-weight: 500;
+}
+
+.nav-user-pill {
+    background: rgba(255, 255, 255, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: var(--radius-pill);
+    padding: 0.35rem 0.9rem;
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: #ffffff !important;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+/* ==========================================================================
+   PIE DE PÁGINA (FOOTER) - LETRAS 100% VISIBLES EN BLANCO Y GRIS CLARO
+   ========================================================================== */
+footer,
+footer.bg-dark,
+.footer-novamarket {
+    background-color: #212529 !important;
+    color: #ffffff !important;
+    padding: 1.75rem 0;
+    margin-top: auto;
+    border-top: 1px solid #343a40;
+}
+
+footer h5,
+footer.bg-dark h5,
+.footer-novamarket h5 {
+    color: #ffffff !important;
+    font-weight: 700 !important;
+    margin-bottom: 0.4rem;
+}
+
+footer p,
+footer.bg-dark p,
+.footer-novamarket p {
+    color: #e9ecef !important;
+    font-size: 0.95rem !important;
+    margin-bottom: 0.4rem;
+}
+
+footer small,
+footer.bg-dark small,
+.footer-novamarket small,
+footer .text-muted,
+.footer-novamarket .text-muted,
+.footer-novamarket .text-secondary {
+    color: #ced4da !important;
+    font-size: 0.85rem !important;
+}
+
+footer a,
+.footer-novamarket a {
+    color: #6ea8fe !important;
+    text-decoration: none;
+}
+
+footer a:hover,
+.footer-novamarket a:hover {
+    color: #9ec5fe !important;
+    text-decoration: underline;
+}
+
+/* ==========================================================================
+   COMPONENTES (TARJETAS, TABLAS, BOTONES, BADGES)
+   ========================================================================== */
+
+/* Tarjetas modernas */
+.card-modern {
+    background: var(--surface-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-sm);
+    transition: var(--transition-fast);
+}
+
+.card-interactive {
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card-interactive:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-card-hover);
+}
+
+/* KPIs de resumen */
+.kpi-card {
+    background: var(--surface-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    padding: 1.1rem 1.3rem;
+    box-shadow: var(--shadow-sm);
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    transition: var(--transition-fast);
+}
+
+.kpi-card:hover {
+    box-shadow: var(--shadow-card);
+    transform: translateY(-2px);
+}
+
+.kpi-icon-wrapper {
+    width: 44px;
+    height: 44px;
+    border-radius: var(--radius-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.3rem;
+    flex-shrink: 0;
+}
+
+.kpi-icon-primary { background-color: #eff6ff; color: #2563eb; }
+.kpi-icon-success { background-color: #ecfdf5; color: #059669; }
+.kpi-icon-warning { background-color: #fffbeb; color: #d97706; }
+.kpi-icon-danger  { background-color: #fef2f2; color: #dc2626; }
+.kpi-icon-info    { background-color: #f0fdfa; color: #0d9488; }
+
+.kpi-label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--text-secondary);
+    margin-bottom: 0.2rem;
+}
+
+.kpi-value {
+    font-size: 1.6rem;
+    font-weight: 700;
+    line-height: 1.1;
+    color: var(--text-primary);
+    font-variant-numeric: tabular-nums;
+}
+
+/* Tablas modernas */
+.table-modern {
+    width: 100%;
+    background-color: var(--surface-card);
+    border-collapse: separate;
+    border-spacing: 0;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+}
+
+.table-modern thead th {
+    background-color: #f1f5f9;
+    color: #334155;
+    font-weight: 600;
+    font-size: 0.82rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    padding: 0.85rem 1rem;
+    border-bottom: 1px solid var(--border-color);
+    white-space: nowrap;
+}
+
+.table-modern tbody td {
+    padding: 0.85rem 1rem;
+    color: #334155;
+    border-bottom: 1px solid #f1f5f9;
+    vertical-align: middle;
+    font-size: 0.92rem;
+}
+
+.table-modern tbody tr:hover td {
+    background-color: #f8fafc;
+}
+
+/* Badges suaves */
+.badge-soft {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.35rem 0.75rem;
+    border-radius: var(--radius-pill);
+    font-size: 0.78rem;
+    font-weight: 600;
+    border: 1px solid transparent;
+}
+
+.badge-soft-success { background-color: #ecfdf5; color: #065f46; border-color: #a7f3d0; }
+.badge-soft-warning { background-color: #fffbeb; color: #92400e; border-color: #fde68a; }
+.badge-soft-danger  { background-color: #fef2f2; color: #991b1b; border-color: #fecaca; }
+.badge-soft-info    { background-color: #eff6ff; color: #1e40af; border-color: #bfdbfe; }
+.badge-soft-neutral { background-color: #f1f5f9; color: #475569; border-color: #cbd5e1; }
+
+.dot-indicator {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    display: inline-block;
+}
+.dot-indicator.dot-success { background-color: #10b981; }
+.dot-indicator.dot-warning { background-color: #f59e0b; }
+.dot-indicator.dot-danger  { background-color: #ef4444; }
+.dot-indicator.dot-info    { background-color: #3b82f6; }
+
+/* Botones */
+.btn {
+    border-radius: var(--radius-sm);
+    font-weight: 600;
+    padding: 0.5rem 1.1rem;
+    transition: var(--transition-fast);
+}
+
+.btn:active {
+    transform: scale(0.98);
+}
+
+.btn-tienda {
+    background-color: #198754;
+    color: #ffffff !important;
+    border: 1px solid transparent;
+}
+.btn-tienda:hover {
+    background-color: #157347;
+    color: #ffffff !important;
+}
+
+.btn-admin {
+    background-color: #0d6efd;
+    color: #ffffff !important;
+    border: 1px solid transparent;
+}
+.btn-admin:hover {
+    background-color: #0b5ed7;
+    color: #ffffff !important;
+}
+
+.btn-proveedor {
+    background-color: #0284c7;
+    color: #ffffff !important;
+    border: 1px solid transparent;
+}
+.btn-proveedor:hover {
+    background-color: #0369a1;
+    color: #ffffff !important;
+}
+
+/* Inputs con Icono */
+.input-group-modern {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.input-group-modern .input-icon {
+    position: absolute;
+    left: 12px;
+    color: #94a3b8;
+    font-size: 1rem;
+    pointer-events: none;
+    z-index: 5;
+}
+
+.input-group-modern .form-control {
+    padding-left: 38px;
+}
+
+/* POS Específico */
+.pos-catalog-card {
+    background: #ffffff;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    padding: 1rem;
+    cursor: pointer;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+}
+
+.pos-catalog-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-card);
+    border-color: #198754;
+}
+
+.pos-price-chip {
+    font-weight: 700;
+    font-size: 1.1rem;
+    color: #198754;
+    font-variant-numeric: tabular-nums;
+}
+
+.pos-ticket-container {
+    background: #ffffff;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-card);
+}
+
+.pos-denomination-btn {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    font-weight: 600;
+    padding: 0.35rem 0.55rem;
+    border-radius: var(--radius-sm);
+    background-color: #f1f5f9;
+    border: 1px solid #cbd5e1;
+    color: #334155;
+    transition: var(--transition-fast);
+}
+
+.pos-denomination-btn:hover {
+    background-color: #e2e8f0;
+    color: #0f172a;
+}
+
+.pos-denomination-btn:active {
+    background-color: #198754;
+    color: #ffffff;
+    border-color: #198754;
 }

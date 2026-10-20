@@ -1,153 +1,172 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+﻿<%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%
     // Evitar cache del navegador
     response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate"); // HTTP 1.1
     response.setHeader("Pragma", "no-cache"); // HTTP 1.0
     response.setDateHeader("Expires", 0); // Proxies
 %>
-
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nuevo Proveedor</title>
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/estilos.css">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <title>Nuevo Proveedor - NovaMarket</title>
+    <!-- Bootstrap CSS & Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <!-- Estilos de NovaMarket -->
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/estilos.css?v=2.2">
 </head>
 <body>
 
-    <nav class="navbar bg-primary">
-        <div class="container-fluid bg-primary">
-            <a class="navbar-brand" href="#">
-            <img src="${pageContext.request.contextPath}/img/logo_NOVAMARKET.png" alt="Logo" width="50" height="44" class="d-inline-block align-text-top">
-            NovaMarket
+    <!-- BARRA DE NAVEGACIÓN -->
+    <nav class="navbar navbar-expand-lg bg-primary navbar-dark sticky-top shadow-sm" data-bs-theme="dark">
+      <div class="container-fluid">
+        <a class="navbar-brand text-white fw-bold d-flex align-items-center gap-2" href="${pageContext.request.contextPath}/Web_inicio/index.jsp">
+          <img src="${pageContext.request.contextPath}/img/logo_NOVAMARKET.png" alt="Logo" width="38" height="38" class="d-inline-block align-text-top rounded">
+          NovaMarket
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Navegación">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav me-auto">
+            <li class="nav-item">
+              <a class="nav-link text-white" href="${pageContext.request.contextPath}/Web_inicio/index.jsp">Inicio</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link text-white" href="${pageContext.request.contextPath}/Web_inicio/Login.jsp">Login</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active text-white fw-bold" aria-current="page" href="${pageContext.request.contextPath}/Web_inicio/Login_New_User.jsp">Nuevo Proveedor</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link text-white" href="${pageContext.request.contextPath}/Web_inicio/Login_New_Tienda.jsp">Nueva Tienda</a>
+            </li>
+          </ul>
+          <div class="d-flex">
+            <a href="${pageContext.request.contextPath}/Web_inicio/Login.jsp" class="btn btn-outline-light btn-sm px-3">
+              <i class="bi bi-box-arrow-in-right me-1"></i> Iniciar Sesión
             </a>
+          </div>
         </div>
-   </nav>
+      </div>
+    </nav>
 
-<nav class="navbar navbar-expand-lg bg-primary">
-  <div class="container-fluid">
-    <a class="navbar-brand" href="index.jsp">Inicio</a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarNav">
-      <ul class="navbar-nav">
-        <li class="nav-item">
-          <a class="nav-link active" aria-current="page" href="Login.jsp">Login</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="Login_New_User.jsp">Nuevo Proveedor</a>
-        </li>
-      </ul>
-    </div>
-  </div>
-</nav>
+<main class="py-4">
 
-<main>
-
-    <div class="formaro_nuevouser">
-    <% if (request.getAttribute("error") != null) { %>
-        <div class="alert alert-danger text-center shadow-sm">
-            <%= request.getAttribute("error") %>
+    <div class="card shadow-sm border-0 mx-auto" style="max-width: 820px;">
+        <div class="card-header bg-primary text-white py-3">
+            <h4 class="mb-0 fw-bold"><i class="bi bi-truck me-2"></i> Registro de Nuevo Proveedor</h4>
+            <small class="text-white-50">Publica tus líneas de productos y conecta con tiendas de todo el país</small>
         </div>
-    <% } %>
-    <form class="row g-3" action="${pageContext.request.contextPath}/proveedores" method="POST" >
+        <div class="card-body p-4">
+            <% if (request.getAttribute("error") != null) { %>
+                <div class="alert alert-danger text-center shadow-sm mb-3">
+                    <i class="bi bi-exclamation-triangle me-1"></i> <%= request.getAttribute("error") %>
+                </div>
+            <% } %>
 
-      <input type="hidden" name="accion" value="crearProveedor">
+            <form class="row g-3" action="${pageContext.request.contextPath}/proveedores" method="POST">
+                <input type="hidden" name="accion" value="crearProveedor">
 
-      <div class="col-md-6">
-        <label for="input" class="form-label">Nombre</label>
-        <input type="text" class="form-control" name="nombre" required>
-      </div>
-      <div class="col-md-6">
-        <label for="inputEmail4" class="form-label">Email</label>
-        <input type="email" class="form-control" id="inputEmail4" name="correo" required>
-      </div>
-      <div class="col-md-6">
-        <label  for="" class="form-label">Contacto</label>
-        <input type="text" class="form-control" name="contacto" required>
-      </div>
-      <div class="col-md-6">
-        <label for="inputPassword4" class="form-label">Crea tu contraseña</label>
-        <input type="password" class="form-control" id="inputPassword4" name="password" required>
-      </div>
-      <div class="col-12">
-        <label for="inputAddress" class="form-label">Dirección</label>
-        <input type="text" class="form-control" id="inputAddress" placeholder="1234 Main St" name="direccionFisica" required>
-      </div>
-      <div class="col-md-4">
-        <label for="inputDepartamento" class="form-label">Departamento</label>
-        <select id="inputDepartamento" class="form-select" name="departamento" required onchange="cargarCiudades()">
-          <option value="" selected>Elige tu Departamento...</option>
-          <option>Amazonas</option>
-          <option>Antioquia</option>
-          <option>Arauca</option>
-          <option>Atlántico</option>
-          <option>Bolívar</option>
-          <option>Boyacá</option>
-          <option>Caldas</option>
-          <option>Caquetá</option>
-          <option>Casanare</option>
-          <option>Cauca</option>
-          <option>Cesar</option>
-          <option>Chocó</option>
-          <option>Córdoba</option>
-          <option>Cundinamarca</option>
-          <option>Guainía</option>
-          <option>Guaviare</option>
-          <option>Huila</option>
-          <option>La Guajira</option>
-          <option>Magdalena</option>
-          <option>Meta</option>
-          <option>Nariño</option>
-          <option>Norte de Santander</option>
-          <option>Putumayo</option>
-          <option>Quindío</option>
-          <option>Risaralda</option>
-          <option>San Andrés y Providencia</option>
-          <option>Santander</option>
-          <option>Sucre</option>
-          <option>Tolima</option>
-          <option>Valle del Cauca</option>
-          <option>Vaupés</option>
-          <option>Vichada</option>
-        </select>
-      </div>
-      <div class="col-md-6">
-        <label for="inputCity" class="form-label">Ciudad</label>
-        <select id="inputCity" class="form-select" name="ciudad" required>
-            <option value="">Elige tu Departamento primero...</option>
-        </select>
-      </div>
-      <div class="col-md-2">
-        <label for="inputZip" class="form-label">Nit</label>
-        <input type="text" class="form-control" name="codigo" id="inputZip">
-      </div>
-      <div class="col-12">
-        <button type="submit" class="btn btn-primary">Crear cuenta</button>
-      </div>
-    </form>
+                <div class="col-md-6">
+                    <label for="inputNombre" class="form-label fw-semibold">Nombre de la Empresa / Proveedor</label>
+                    <input type="text" class="form-control" id="inputNombre" name="nombre" required placeholder="Ej: Distribuidora Central S.A.S.">
+                </div>
+                <div class="col-md-6">
+                    <label for="inputEmail4" class="form-label fw-semibold">Correo Electrónico</label>
+                    <input type="email" class="form-control" id="inputEmail4" name="correo" required placeholder="contacto@distribuidora.com">
+                </div>
+                <div class="col-md-6">
+                    <label for="inputContacto" class="form-label fw-semibold">Persona de Contacto / Teléfono</label>
+                    <input type="text" class="form-control" id="inputContacto" name="contacto" required placeholder="Ej: Carlos Gómez - 3151234567">
+                </div>
+                <div class="col-md-6">
+                    <label for="inputPassword4" class="form-label fw-semibold">Crea tu contraseña</label>
+                    <input type="password" class="form-control" id="inputPassword4" name="password" required placeholder="••••••••">
+                </div>
+                <div class="col-12">
+                    <label for="inputAddress" class="form-label fw-semibold">Dirección Física</label>
+                    <input type="text" class="form-control" id="inputAddress" placeholder="Ej: Calle 26 # 68-35" name="direccionFisica" required>
+                </div>
+                <div class="col-md-4">
+                    <label for="inputDepartamento" class="form-label fw-semibold">Departamento</label>
+                    <select id="inputDepartamento" class="form-select" name="departamento" required onchange="cargarCiudades()">
+                      <option value="" selected>Elige tu Departamento...</option>
+                      <option>Amazonas</option>
+                      <option>Antioquia</option>
+                      <option>Arauca</option>
+                      <option>Atlántico</option>
+                      <option>Bolívar</option>
+                      <option>Boyacá</option>
+                      <option>Caldas</option>
+                      <option>Caquetá</option>
+                      <option>Casanare</option>
+                      <option>Cauca</option>
+                      <option>Cesar</option>
+                      <option>Chocó</option>
+                      <option>Córdoba</option>
+                      <option>Cundinamarca</option>
+                      <option>Guainía</option>
+                      <option>Guaviare</option>
+                      <option>Huila</option>
+                      <option>La Guajira</option>
+                      <option>Magdalena</option>
+                      <option>Meta</option>
+                      <option>Nariño</option>
+                      <option>Norte de Santander</option>
+                      <option>Putumayo</option>
+                      <option>Quindío</option>
+                      <option>Risaralda</option>
+                      <option>San Andrés y Providencia</option>
+                      <option>Santander</option>
+                      <option>Sucre</option>
+                      <option>Tolima</option>
+                      <option>Valle del Cauca</option>
+                      <option>Vaupés</option>
+                      <option>Vichada</option>
+                    </select>
+                </div>
+                <div class="col-md-5">
+                    <label for="inputCity" class="form-label fw-semibold">Ciudad</label>
+                    <select id="inputCity" class="form-select" name="ciudad" required>
+                        <option value="">Elige tu Departamento primero...</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label for="inputZip" class="form-label fw-semibold">NIT / Identificación</label>
+                    <input type="text" class="form-control" name="codigo" id="inputZip" placeholder="Ej: 900123456-1">
+                </div>
+                <div class="col-12 mt-4 pt-2 border-top d-flex justify-content-between align-items-center">
+                    <a href="${pageContext.request.contextPath}/Web_inicio/Login.jsp" class="text-decoration-none text-primary">
+                        <i class="bi bi-arrow-left me-1"></i> Ya tengo cuenta
+                    </a>
+                    <button type="submit" class="btn btn-primary px-4 fw-semibold">
+                        <i class="bi bi-check2-circle me-1"></i> Crear cuenta de Proveedor
+                    </button>
+                </div>
+            </form>
+        </div>
     </div>
 
 </main>
 
+<!-- PIE DE PÁGINA -->
+<footer class="bg-dark text-white text-center py-3 mt-auto">
+    <div class="container">
+        <p class="mb-1 text-white">© 2026 NovaMarket. Todos los derechos reservados.</p>
+        <small class="text-light">Sistema de Gestión y Comercio Electrónico</small>
+    </div>
+</footer>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
 
 <script>
 document.addEventListener("DOMContentLoaded", function() {
-    // 1. Analizar los parámetros de la URL actual
     var urlParams = new URLSearchParams(window.location.search);
-
-    // 2. Verificar si viene el parámetro de éxito enviado por el Servlet
     if (urlParams.get('registroExitoso') === 'true') {
-
-        // Opción A: Alerta nativa del navegador (Sencilla y directa)
         alert("¡Cuenta de proveedor creada con éxito!");
-
-        // 3. Limpiar el parámetro de la URL para evitar que se repita al recargar con F5
         var cleanUrl = window.location.protocol + "//" + window.location.host + window.location.pathname;
         if(urlParams.get('accion')) {
             cleanUrl += "?accion=" + urlParams.get('accion');
@@ -195,10 +214,7 @@ const ciudadesPorDepartamento = {
 function cargarCiudades() {
     const departamento = document.getElementById("inputDepartamento").value;
     const selectCiudad = document.getElementById("inputCity");
-
-    // Limpia las opciones actuales
     selectCiudad.innerHTML = "";
-
     const ciudades = ciudadesPorDepartamento[departamento];
 
     if (!ciudades) {
@@ -206,14 +222,12 @@ function cargarCiudades() {
         return;
     }
 
-    // Opción por defecto
     const optDefault = document.createElement("option");
     optDefault.value = "";
     optDefault.textContent = "Elige tu ciudad...";
     optDefault.selected = true;
     selectCiudad.appendChild(optDefault);
 
-    // Llena con las ciudades del departamento elegido
     ciudades.forEach(function(ciudad) {
         const opt = document.createElement("option");
         opt.value = ciudad;

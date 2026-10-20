@@ -1,63 +1,119 @@
-.fondo-personalizado{
+/* ==========================================================================
+   NOVAMARKET - ESTILOS DE LOGIN (estilosLogin.css)
+   Fondo de pantalla completo con caja centrada y tipografía clara
+   ========================================================================== */
 
-    background-image: url(../img/Fondo_login.png);
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    height: 100vh;
+/* Anular el contenedor blanco global de <main> en la pantalla de login */
+main,
+main.bg-transparent {
+    background: transparent !important;
+    background-color: transparent !important;
+    box-shadow: none !important;
+    border: none !important;
+    border-radius: 0 !important;
+    max-width: 100% !important;
+    width: 100% !important;
+    margin: 0 auto !important;
 }
 
-.fondo-con-overlay{
-    position: relative;
-    background-image: url(../img/imagen_negra.jpeg);
-    background-size: cover;
-    color: white;
-    padding: 2rem;
-};
-
-
-
-/* Asegura que el contenedor principal ocupe toda la pantalla visible */
-.fondo-personalizado{
-
+/* Fondo responsivo con overlay */
+.fondo-personalizado {
     background-image: url(../img/Fondo_login.png);
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
-    height: 100vh; /* Ocupa el 100% de la altura de la ventana (Viewport Height) */
+    background-attachment: fixed;
     width: 100%;
 }
 
-/* El contenedor del formulario que tendrá el overlay */
+/* El contenedor del formulario con overlay oscuro legible */
 .fondo-con-overlay {
     position: relative;
-    /* Ajusta el ancho máximo si lo necesitas, Bootstrap maneja el padding (p-4) */
-    max-width: 400px;
-    background-color: transparent;
-}
-
-/* El parche negro medio transparente que cubre solo el cuadro de login */
-.fondo-con-overlay::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
     width: 100%;
-    height: 100%;
-    background-color: #000;
-    opacity: 0.7; /* Transparencia */
-    z-index: -1; /* Lo enviamos detrás del contenido pero por encima del fondo del div */
-    border-radius: .5rem; /* Bordes redondeados para que coincida con la clase Bootstrap .rounded */
+    max-width: 440px;
+    background: rgba(15, 23, 42, 0.92);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 16px;
+    box-shadow: 0 20px 45px rgba(0, 0, 0, 0.6);
+    padding: 2.2rem;
+    color: #ffffff;
+    margin: 0 auto;
 }
 
-/* El contenido (texto, inputs) debe estar por encima del parche */
-.fondo-con-overlay *, .fondo-con-overlay {
-    position: relative;
-    z-index: 1; /* Asegura que todo el contenido tenga un z-index superior a -1 */
-    color: white; /* Asegura que tu texto sea blanco */
+.fondo-con-overlay * {
+    color: #ffffff;
 }
 
-/* Estilo para el enlace de "Olvidaste tu contraseña?" para que se vea blanco */
+.fondo-con-overlay .form-control {
+    background-color: #ffffff !important;
+    color: #0f172a !important;
+    border: 1px solid #cbd5e1 !important;
+    border-radius: 8px !important;
+    padding: 0.65rem 0.9rem !important;
+    font-size: 0.95rem !important;
+}
+
+.fondo-con-overlay .form-control:focus {
+    border-color: #3b82f6 !important;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.25) !important;
+}
+
+.fondo-con-overlay .form-label {
+    color: #f1f5f9 !important;
+    font-weight: 600 !important;
+    font-size: 0.88rem !important;
+    margin-bottom: 0.35rem !important;
+}
+
+.fondo-con-overlay .btn-primary {
+    background-color: #0d6efd !important;
+    border-color: #0d6efd !important;
+    color: #ffffff !important;
+    font-weight: 600 !important;
+    padding: 0.7rem !important;
+    border-radius: 8px !important;
+    transition: all 0.2s ease !important;
+}
+
+.fondo-con-overlay .btn-primary:hover {
+    background-color: #0b5ed7 !important;
+    border-color: #0a58ca !important;
+    transform: translateY(-1px);
+}
+
 .fondo-con-overlay a {
-    color: #0d6efd; /* Color azul de Bootstrap por defecto */
+    color: #60a5fa !important;
+    text-decoration: none;
+}
+
+.fondo-con-overlay a:hover {
+    color: #93c5fd !important;
+    text-decoration: underline;
+}
+
+.login-brand-logo {
+    width: 80px !important;
+    height: 80px !important;
+    max-width: 80px !important;
+    max-height: 80px !important;
+    object-fit: cover !important;
+    border-radius: 50% !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3) !important;
+    margin: 0 auto 0.75rem auto;
+    display: block;
+    background-color: #ffffff;
+}
+
+.error-message {
+    color: #721c24 !important;
+    background-color: #f8d7da;
+    border: 1px solid #f5c6cb;
+    padding: 10px 14px;
+    margin-bottom: 16px;
+    border-radius: 8px;
+    text-align: center;
+    font-size: 0.9rem;
+    font-weight: 500;
 }

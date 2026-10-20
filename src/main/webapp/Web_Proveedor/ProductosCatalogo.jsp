@@ -1,4 +1,4 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+﻿<%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ page import="java.util.List" %>
 <%@ page import="Modelo.Producto" %>
 <%@ page import="Modelo.Proveedor" %>
@@ -52,6 +52,8 @@
     Object usuarioSesion =
             session.getAttribute("usuarioLogueado");
 
+    Proveedor proveedorLogueado = (usuarioSesion instanceof Proveedor) ? (Proveedor) usuarioSesion : null;
+
     if (usuarioSesion instanceof Proveedor) {
 
         idProveedorSesion =
@@ -89,6 +91,7 @@
     <link
             rel="stylesheet"
             href="${pageContext.request.contextPath}/css/estilos.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 
@@ -102,10 +105,11 @@
 -->
 
 <!-- BARRA DE NAVEGACIÓN -->
-<nav class="navbar navbar-expand-lg bg-primary navbar-dark">
+<nav class="navbar navbar-expand-lg bg-primary navbar-dark navbar-novamarket navbar-proveedor sticky-top shadow-sm" data-bs-theme="dark">
     <div class="container-fluid">
-        <a class="navbar-brand text-white" href="${pageContext.request.contextPath}/proveedores?accion=listar">
-            Inicio Proveedores
+        <a class="navbar-brand text-white fw-bold d-flex align-items-center gap-2" href="${pageContext.request.contextPath}/proveedores?accion=listar">
+            <img src="${pageContext.request.contextPath}/img/logo_NOVAMARKET.png" alt="Logo" width="34" height="34" class="rounded">
+            NovaMarket <span class="badge bg-white text-primary ms-1 small fw-bold px-2 py-1">Proveedor</span>
         </a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
             <span class="navbar-toggler-icon"></span>
@@ -113,23 +117,34 @@
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav me-auto">
                 <li class="nav-item">
-                    <a class="nav-link text-white" href="${pageContext.request.contextPath}/productos?accion=listar">
-                        Productos
+                    <a class="nav-link text-white" href="${pageContext.request.contextPath}/proveedores?accion=listar">
+                        <i class="bi bi-speedometer2 me-1"></i> Inicio
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link active text-white" href="${pageContext.request.contextPath}/pedidos?accion=pedidosProveedor">
-                        Pedidos
+                    <a class="nav-link active text-white fw-bold" href="${pageContext.request.contextPath}/productos?accion=listar">
+                        <i class="bi bi-box-seam me-1"></i> Mis Productos
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-white" href="${pageContext.request.contextPath}/pedidos?accion=pedidosProveedor">
+                        <i class="bi bi-truck me-1"></i> Pedidos Recibidos
                     </a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link text-white" href="${pageContext.request.contextPath}/Web_Proveedor/Actulizar_proveedor.jsp">
-                        Actualizar Perfil
+                        <i class="bi bi-person-gear me-1"></i> Mi Perfil
                     </a>
                 </li>
             </ul>
-            <div class="d-flex">
-                <a href="${pageContext.request.contextPath}/auth?accion=logout" class="btn btn-outline-light btn-sm">Cerrar Sesión</a>
+            <div class="d-flex align-items-center gap-3">
+                <div class="nav-user-pill text-white">
+                    <i class="bi bi-person-circle me-1"></i>
+                    <span><%= (proveedorLogueado != null) ? proveedorLogueado.getNombre() : "Proveedor" %></span>
+                </div>
+                <a href="${pageContext.request.contextPath}/auth?accion=logout" class="btn btn-outline-light btn-sm px-3">
+                    <i class="bi bi-box-arrow-right me-1"></i> Salir
+                </a>
             </div>
         </div>
     </div>
